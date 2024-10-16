@@ -42,13 +42,13 @@ const HeroFeatures = () => {
   return (
     <section className="max-w-6xl mx-auto my-20 px-5">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16">
-        {features.map((feature) => (
-          <div key={feature.id}>
+        {features.map(({ id, icon, title, text }) => (
+          <div key={id}>
             <header className="flex gap-3 items-center mb-4">
-              <Image src={feature.icon} alt={feature.title} />
-              <h2 className="font-medium">{feature.title}</h2>
+              <Image src={icon} alt={title} />
+              <h2 className="font-medium">{title}</h2>
             </header>
-            <p className="text-slate-800 max-w-[230px]">{feature.text}</p>
+            <p className="text-slate-800 max-w-[230px]">{text}</p>
           </div>
         ))}
       </div>

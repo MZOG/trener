@@ -19,7 +19,8 @@ const buttonVariants = cva(
           'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
-        citySearch: 'text-lg bg-[#1953FF] text-primary-foreground rounded-lg'
+        citySearch:
+          'text-[17px] bg-trenerBlue text-primary-foreground rounded-lg'
       },
       size: {
         default: 'h-9 px-4 py-2',
