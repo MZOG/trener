@@ -1,9 +1,9 @@
-const PanelPage = () => {
+const TrenerPage = () => {
   return (
     <section className="max-w-6xl mx-auto px-5">
-      <p>Panel page</p>
+      <p>Trener page</p>
     </section>
   );
 };
 
-export default PanelPage;
+export default TrenerPage;
