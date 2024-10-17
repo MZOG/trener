@@ -23,7 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider localization={plPL}>
+    <ClerkProvider
+      localization={plPL}
+      appearance={{
+        layout: {
+          // termsPageUrl: '/terms',
+          helpPageUrl: '/faq',
+          unsafe_disableDevelopmentModeWarnings: true
+        }
+      }}
+    >
       <html lang="pl">
         <body className={`${geistSans.variable} antialiased bg-[#FBFCFF]`}>
           <Header />
