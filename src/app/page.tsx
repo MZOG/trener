@@ -5,7 +5,6 @@ import LatestTrainers from '@/components/LatestTrainers';
 export default function Home() {
   return (
     <div>
-      <p>header</p>
       <Hero />
       <HeroFeatures />
       <LatestTrainers />
