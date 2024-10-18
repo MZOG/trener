@@ -32,7 +32,7 @@ const mockedTrainers = [
 
 const LatestTrainers = () => {
   return (
-    <section className="mx-auto px-5 max-w-6xl py-20">
+    <section className="mx-auto px-5 max-w-6xl pb-20">
       <h2 className="text-xl">Niedawno dołączyli</h2>
 
       <Carousel className="mt-5">

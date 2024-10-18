@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 const Hero = () => {
   return (
-    <section className="max-w-6xl mx-auto px-5 flex gap-10 items-center justify-between py-20">
+    <section className="max-w-6xl mx-auto px-5 flex gap-10 items-center justify-between pb-20">
       <div className="space-y-5">
         <h1 className="text-5xl font-medium max-w-[480px]">
           Znajdź swojego trenera personalnego

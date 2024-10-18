@@ -40,7 +40,7 @@ const features: FeaturesProps[] = [
 
 const HeroFeatures = () => {
   return (
-    <section className="max-w-6xl mx-auto my-20 px-5">
+    <section className="max-w-6xl mx-auto mb-20 px-5">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-16">
         {features.map(({ id, icon, title, text }) => (
           <div key={id}>
