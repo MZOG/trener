@@ -1,9 +1,11 @@
-const PanelPage = () => {
-  return (
-    <section className="max-w-6xl mx-auto px-5">
-      <p>Panel page</p>
-    </section>
-  );
+import { currentUser } from '@clerk/nextjs/server';
+import ClientPage from './ClientPage';
+
+const PanelPage = async () => {
+  const user = await currentUser();
+  if (user) {
+    return <ClientPage userID={user.id} />;
+  }
 };
 
 export default PanelPage;

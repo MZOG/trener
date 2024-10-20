@@ -1072,7 +1072,7 @@ const CitySearch = () => {
     // </div>
 
     <div className="not-prose mt-8 flex flex-col gap-4">
-      <AutoComplete
+      {/* <AutoComplete
         options={miasta}
         emptyMessage="Brak wyników."
         placeholder="Wpisz miasto"
@@ -1080,7 +1080,7 @@ const CitySearch = () => {
         onValueChange={setValue}
         value={value}
         disabled={isDisabled}
-      />
+      /> */}
     </div>
   );
 };

@@ -35,7 +35,7 @@ export default function RootLayout({
     >
       <html lang="pl">
         <body
-          className={`${geistSans.variable} antialiased bg-[#FBFCFF] pt-28`}
+          className={`${geistSans.variable} antialiased bg-[#FBFCFF] pt-[150px]`}
         >
           <Header />
           {children}
