@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import { ClerkProvider } from '@clerk/nextjs';
 import { plPL } from '@clerk/localizations';
 import './globals.css';
+import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/Header';
 
 const geistSans = localFont({
@@ -39,6 +40,7 @@ export default function RootLayout({
         >
           <Header />
           {children}
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

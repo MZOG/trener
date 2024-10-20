@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 
+import { useToast } from '@/hooks/use-toast';
+
 type UserInfoProps = {
   user_id: string;
   email: Text;
@@ -11,16 +13,15 @@ type UserInfoProps = {
   full_name: string;
 };
 
-const ClientPage = ({ userID }: { userID: string }) => {
+type ClientPageProps = {
+  userID: string;
+};
+
+const ClientPage = ({ userID }: ClientPageProps) => {
+  const [selected, setSelected] = useState<boolean>();
   const [userInfo, setUserInfo] = useState<UserInfoProps>();
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(false);
-
-  const handleSelect = (isTrainer: boolean) => {
-    // setSelected(isTrainer);
-    // router.refresh();
-    console.log(`isTrainer: ${isTrainer}`);
-  };
+  const { toast } = useToast();
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -43,9 +44,30 @@ const ClientPage = ({ userID }: { userID: string }) => {
     }
   };
 
+  const selectAccountType = async (isTrainer: boolean) => {
+    setSelected(true);
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('users')
+      .update({ is_trainer: isTrainer })
+      .eq('user_id', userID)
+      .select();
+
+    if (error) {
+      toast({
+        title: 'Ups..',
+        description: 'Coś poszło nie tak'
+      });
+    }
+
+    if (data) {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     getData();
-  }, []);
+  }, [loading]);
 
   if (loading) {
     return (
@@ -70,8 +92,10 @@ const ClientPage = ({ userID }: { userID: string }) => {
           <p>Wybierz opcję, która pasuje do Ciebie.</p>
 
           <div className="mt-10 flex gap-5">
-            <Button onClick={() => handleSelect(true)}>Jestem trenerem</Button>
-            <Button onClick={() => handleSelect(false)} variant="outline">
+            <Button onClick={() => selectAccountType(true)}>
+              Jestem trenerem
+            </Button>
+            <Button onClick={() => selectAccountType(false)} variant="outline">
               Szukam trenera
             </Button>
           </div>
@@ -80,13 +104,23 @@ const ClientPage = ({ userID }: { userID: string }) => {
     );
   }
 
-  return (
-    <div className="max-w-5xl mx-auto px-5">
-      <div className="bg-white p-10 border rounded-2xl">
-        <h1>Panel</h1>
+  if (userInfo?.is_trainer) {
+    return (
+      <div className="max-w-5xl mx-auto px-5">
+        <div className="bg-white p-10 border rounded-2xl">
+          <h1>Panel trenera</h1>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="max-w-5xl mx-auto px-5">
+        <div className="bg-white p-10 border rounded-2xl">
+          <h1>Panel użytkownika</h1>
+        </div>
+      </div>
+    );
+  }
 };
 
 export default ClientPage;
