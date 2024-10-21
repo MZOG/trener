@@ -1,3 +1,4 @@
+'use client';
 import {
   Carousel,
   CarouselContent,
@@ -5,54 +6,57 @@ import {
   CarouselNext,
   CarouselPrevious
 } from '@/components/ui/carousel';
-import Link from 'next/link';
-
-const mockedTrainers = [
-  {
-    name: 'Marcin Zogrodnik',
-    city: 'Katowice',
-    href: '/trener/marcin-zogrodnik'
-  },
-  {
-    name: 'Sebastian Jabłoński',
-    city: 'Katowice',
-    href: '/trener/marcin-zogrodnik'
-  },
-  {
-    name: 'Daniel Świątkowski',
-    city: 'Katowice',
-    href: '/trener/marcin-zogrodnik'
-  },
-  {
-    name: 'Janusz Kasztan',
-    city: 'Katowice',
-    href: '/trener/marcin-zogrodnik'
-  }
-];
+import { useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { Skeleton } from './ui/skeleton';
+import { Database } from '../../database.types';
+import LatestTrainerCard from './LatestTrainerCard';
+import { LatestTrainersProps } from '@/types/LatestTrainers';
 
 const LatestTrainers = () => {
+  const [trainers, setTrainers] = useState<LatestTrainersProps>();
+  const [loading, setLoading] = useState(true);
+
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_KEY!
+  );
+
+  const getTrainers = async () => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('full_name, location')
+      .not('is_trainer', 'is', false);
+
+    if (data) {
+      setTrainers(data);
+      setLoading(false);
+    }
+
+    if (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getTrainers();
+  }, []);
+
+  if (loading) {
+    return <Skeleton className="h-20 w-40" />;
+  }
+
   return (
     <section className="mx-auto px-5 max-w-6xl pb-20">
       <h2 className="text-xl">Niedawno dołączyli</h2>
-
       <Carousel className="mt-5">
         <CarouselContent>
-          {mockedTrainers.map((trainer, index) => (
-            <CarouselItem key={index} className="md:basis-1/3">
-              <Link
-                href={trainer.href}
-                className="p-3 rounded-lg flex items-center gap-4 group border hover:border-trenerBlue"
-              >
-                <div className="size-14 rounded-full bg-gray-100"></div>
-                <div>
-                  <h3 className="group-hover:text-trenerBlue">
-                    {trainer.name}
-                  </h3>
-                  <p className="text-sm text-slate-800">{trainer.city}</p>
-                </div>
-              </Link>
-            </CarouselItem>
-          ))}
+          {trainers &&
+            trainers.map((trainer, index) => (
+              <CarouselItem key={index} className="md:basis-1/3">
+                <LatestTrainerCard {...trainer} />
+              </CarouselItem>
+            ))}
         </CarouselContent>
         <CarouselPrevious className="border-none shadow-none" />
         <CarouselNext className="border-none shadow-none" />

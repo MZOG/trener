@@ -1,5 +1,5 @@
 const miasta = [
-  "Bolesławiec",
+"Bolesławiec",
 "Nowogrodziec",
 "Bielawa",
 "Dzierżoniów",

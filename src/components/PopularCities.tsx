@@ -4,8 +4,13 @@ import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import { Skeleton } from './ui/skeleton';
 
+type CitiesProps = {
+  city: string;
+  location: string;
+};
+
 const PopularCities = () => {
-  const [cities, setCities] = useState<string[]>();
+  const [cities, setCities] = useState<CitiesProps[]>();
   const [loading, setLoading] = useState(true);
 
   const supabase = createClient(
@@ -16,7 +21,8 @@ const PopularCities = () => {
   const getCities = async () => {
     const { data, error } = await supabase
       .from('users')
-      .select('city, location');
+      .select('city, location')
+      .not('is_trainer', 'is', false);
 
     if (data) {
       const mapFromCities = new Map(data.map((c) => [c.city, c]));
@@ -33,15 +39,6 @@ const PopularCities = () => {
   useEffect(() => {
     getCities();
   }, []);
-
-  // const cities = [
-  //   { name: 'Warszawa', href: '/miasto/warszawa' },
-  //   { name: 'Poznań', href: '/miasto/poznan' },
-  //   { name: 'Katowice', href: '/miasto/katowice' },
-  //   { name: 'Gdańsk', href: '/miasto/gdansk' },
-  //   { name: 'Wrocław', href: '/miasto/wroclaw' },
-  //   { name: 'Kraków', href: '/miasto/krakow' }
-  // ];
 
   if (loading) {
     return <Skeleton className="h-5 w-80" />;

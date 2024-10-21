@@ -4,7 +4,6 @@ import HeroImage from '../../public/svg/hero_image.svg';
 // components
 import CitySearch from './CitySearch';
 import PopularCities from './PopularCities';
-import Link from 'next/link';
 
 const Hero = () => {
   return (
