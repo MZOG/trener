@@ -13,7 +13,10 @@ const geistSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Znajdź trenera personalnego',
+  title: {
+    template: '%s | Trener personalny',
+    default: 'Znajdź trenera personalnego'
+  },
   description:
     'Darmowa wyszukiwarka trenerów personalnych w Twoim mieście. Wpisz swoje miasto i znajdź trenera personalnego.'
 };

@@ -55,7 +55,6 @@ export async function POST(req: Request) {
     user_id: id,
     email: email_addresses[0].email_address,
     full_name: `${first_name} ${last_name}` as string
-    // ...attributes
   });
 
   if (error) {
