@@ -8,7 +8,6 @@ export default function Home() {
       <Hero />
       <HeroFeatures />
       <LatestTrainers />
-      <p>for trainer</p>
     </div>
   );
 }

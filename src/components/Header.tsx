@@ -43,20 +43,20 @@ export default function Header() {
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <Link href="/dla-trenera" className="text-sm leading-6 text-gray-900">
-            Dla trenera
+            Dla trenerów
           </Link>
           <Link
             href="/dla-trenujacego"
             className="text-sm leading-6 text-gray-900"
           >
-            Dla trenującego
+            Dla trenujących
           </Link>
           <Link href="/faq" className="text-sm leading-6 text-gray-900">
-            FAQ
+            Pomoc
           </Link>
-          {/* <a href="#" className="text-sm leading-6 text-gray-900">
+          <Link href="/cennik" className="text-sm leading-6 text-gray-900">
             Cennik
-          </a> */}
+          </Link>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <UserLogin />

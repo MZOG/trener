@@ -106,16 +106,16 @@ const ClientPage = ({ userID }: ClientPageProps) => {
 
   if (userInfo?.is_trainer) {
     return (
-      <div className="max-w-5xl mx-auto px-5">
-        <div className="bg-white p-10 border rounded-2xl">
+      <div className="max-w-3xl mx-auto px-5">
+        <div className="bg-white p-8 border rounded-2xl">
           <h1>Panel trenera</h1>
         </div>
       </div>
     );
   } else {
     return (
-      <div className="max-w-5xl mx-auto px-5">
-        <div className="bg-white p-10 border rounded-2xl">
+      <div className="max-w-3xl mx-auto px-5">
+        <div className="bg-white p-8 border rounded-2xl">
           <h1>Panel użytkownika</h1>
         </div>
       </div>
