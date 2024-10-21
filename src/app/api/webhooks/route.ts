@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   }
 
   // Handle the webhook
-  const { id, email_addresses } = evt.data;
+  const { id, email_addresses, first_name, last_name } = evt.data;
 
   // Create Supabase client
   const supabase = createClient(
@@ -60,7 +60,8 @@ export async function POST(req: Request) {
   // Insert new user into Supabase
   const { data, error } = await supabase.from('users').insert({
     user_id: id,
-    email: email_addresses[0].email_address
+    email: email_addresses[0].email_address,
+    full_name: `${first_name} ${last_name}` as string
     // ...attributes
   });
 

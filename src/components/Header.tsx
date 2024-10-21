@@ -51,7 +51,7 @@ export default function Header() {
           >
             Dla trenujących
           </Link>
-          <Link href="/faq" className="text-sm leading-6 text-gray-900">
+          <Link href="/pomoc" className="text-sm leading-6 text-gray-900">
             Pomoc
           </Link>
           <Link href="/cennik" className="text-sm leading-6 text-gray-900">
