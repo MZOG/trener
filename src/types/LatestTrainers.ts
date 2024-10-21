@@ -1,11 +1,6 @@
-export type LatestTrainersProps = {
-  city: string;
-  location: string;
-  full_name: string;
-  slug: string;
-}[];
+export interface LatestTrainersProps {
+  location: string | null;
+  full_name: string | null;
+}
 
-export type TrainerProps = {
-  full_name: string;
-  location: string;
-};
+export type TrainerProps = Pick<LatestTrainersProps, 'full_name' | 'location'>;

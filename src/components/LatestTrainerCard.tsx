@@ -4,9 +4,15 @@ import { TrainerProps } from '@/types/LatestTrainers';
 
 const LatestTrainerCard = (trainer: TrainerProps) => {
   const { full_name, location } = trainer;
+
+  // do not show trainers without name (after register error)
+  if (!full_name || !location) {
+    return;
+  }
+
   return (
     <Link
-      href={`/trener/${slugify(full_name)}`}
+      href={`/trener/${slugify(full_name as string)}`}
       className="p-3 rounded-lg flex items-center gap-4 group border hover:border-trenerBlue"
     >
       <div className="size-14 rounded-full bg-gray-100"></div>

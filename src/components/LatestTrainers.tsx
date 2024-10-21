@@ -14,8 +14,8 @@ import LatestTrainerCard from './LatestTrainerCard';
 import { LatestTrainersProps } from '@/types/LatestTrainers';
 
 const LatestTrainers = () => {
-  const [trainers, setTrainers] = useState<LatestTrainersProps>();
-  const [loading, setLoading] = useState(true);
+  const [trainers, setTrainers] = useState<LatestTrainersProps[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,7 +26,8 @@ const LatestTrainers = () => {
     const { data, error } = await supabase
       .from('users')
       .select('full_name, location')
-      .not('is_trainer', 'is', false);
+      .not('is_trainer', 'is', false)
+      .not('location', 'is', null);
 
     if (data) {
       setTrainers(data);
