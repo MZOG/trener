@@ -22,7 +22,7 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         citySearch:
-          'text-[17px] bg-trenerBlue text-primary-foreground rounded-lg'
+          'text-base bg-trenerBlue leading-none text-white font-semibold rounded-lg  hover:bg-trenerBlue/90'
       },
       size: {
         default: 'h-9 px-4 py-2',

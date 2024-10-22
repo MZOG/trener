@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
-  font-family: Arial, Helvetica, sans-serif;
-} */
+.searchInput .wrapper input {
+  padding-left: 20px !important;
+}
 
 @layer utilities {
   .text-balance {

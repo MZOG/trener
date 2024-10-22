@@ -58,7 +58,11 @@ export default function Header() {
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           {menuLinks.map((item, index) => (
-            <Link key={index} href={item.href} className="text-sm font-medium">
+            <Link
+              key={index}
+              href={item.href}
+              className="text-sm font-medium hover:text-trenerBlue"
+            >
               {item.name}
             </Link>
           ))}
