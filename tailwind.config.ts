@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // fontFamily: {
+      //   sans: ['var(--font-geist-sans)']
+      // },
       colors: {
         trenerBlue: 'hsl(var(--trenerBlue))',
         trenerDark: 'hsl(var(--trenerDark))',
@@ -60,6 +63,6 @@ const config: Config = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: []
 };
 export default config;

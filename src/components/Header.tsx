@@ -54,8 +54,8 @@ export default function Header() {
           <Link href="/pomoc" className="text-sm leading-6 text-gray-900">
             Pomoc
           </Link>
-          <Link href="/cennik" className="text-sm leading-6 text-gray-900">
-            Cennik
+          <Link href="/trener-pro" className="text-sm leading-6 text-gray-900">
+            Trener Pro
           </Link>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">

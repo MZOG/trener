@@ -22,7 +22,8 @@ const PopularCities = () => {
     const { data, error } = await supabase
       .from('users')
       .select('city, location')
-      .not('is_trainer', 'is', false);
+      .not('is_trainer', 'is', false)
+      .not('city', 'is', null);
 
     if (data) {
       const mapFromCities = new Map(data.map((c) => [c.city, c]));
@@ -49,10 +50,10 @@ const PopularCities = () => {
       <p className="text-xs text-slate-800">Popularne miasta:</p>
       <ul className="flex gap-5 mt-1">
         {cities?.map((city, index) => (
-          <li key={index} className="text-sm">
+          <li key={index}>
             <Link
               href={`/miasto/${city.city}`}
-              className="hover:underline underline-offset-2"
+              className="hover:text-trenerBlue hover:underline underline-offset-2 text-sm font-medium"
             >
               {city.location}
             </Link>

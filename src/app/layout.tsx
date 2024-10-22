@@ -1,16 +1,10 @@
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
+import { GeistSans } from 'geist/font/sans';
 import { ClerkProvider } from '@clerk/nextjs';
 import { plPL } from '@clerk/localizations';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/Header';
-
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900'
-});
 
 export const metadata: Metadata = {
   title: {
@@ -39,7 +33,7 @@ export default function RootLayout({
     >
       <html lang="pl">
         <body
-          className={`${geistSans.variable} antialiased bg-[#FBFCFF] pt-[100px] h-[calc(100wh-100px)]`}
+          className={`${GeistSans.className} antialiased bg-[#FBFCFF] pt-[100px] text-trenerDark`}
         >
           <Header />
           {children}
