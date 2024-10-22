@@ -3,33 +3,38 @@ import { useState } from 'react';
 import { Button } from './ui/button';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import { miasta } from '@/lib/miasta';
+import { slugify } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+
 type Item = {
   id: number;
   name: string;
 };
 
 const CitySearch = () => {
+  const router = useRouter();
   const [selectedCity, setSelectedCity] = useState('');
 
   const handleOnSelect = (item: { id: number; name: string }) => {
-    setSelectedCity(item.name);
-    console.log(item.name);
+    setSelectedCity(slugify(item.name));
   };
 
   const formatResult = (item: { id: number; name: string }) => {
     return <p className="pl-2 py-1">{item.name}</p>;
   };
+
+  const handleOnSearch = () => {
+    router.push(`/miasto/${selectedCity}`);
+  };
+
   return (
-    <div className="relative z-40">
+    <div className="relative z-20">
       <ReactSearchAutocomplete<Item>
         items={miasta}
         maxResults={5}
-        // onSearch={handleOnSearch}
-        // onHover={handleOnHover}
         onSelect={handleOnSelect}
-        // onFocus={handleOnFocus}
         autoFocus
-        fuseOptions={{ keys: ['name'] }}
+        fuseOptions={{ keys: ['name'], shouldSort: true }}
         resultStringKeyName="name"
         formatResult={formatResult}
         showIcon={false}
@@ -42,9 +47,10 @@ const CitySearch = () => {
         }}
       />
       <Button
+        onClick={() => handleOnSearch()}
         size="citySearch"
         variant="citySearch"
-        className="absolute top-1/2 right-2 transform -translate-y-1/2 rounded-full"
+        className="absolute z-30 top-1/2 right-2 transform -translate-y-1/2 rounded-full"
       >
         Szukaj
       </Button>

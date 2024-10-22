@@ -6,6 +6,10 @@
   padding-left: 20px !important;
 }
 
+.searchInput .wrapper .clear-icon {
+  margin: 3px 100px 0 0;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
