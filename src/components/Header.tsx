@@ -17,6 +17,21 @@ export default function Header() {
     });
   }, []);
 
+  const menuLinks = [
+    {
+      name: 'Dla trenera',
+      href: '/dla-trenera'
+    },
+    {
+      name: 'Dla trenującego',
+      href: '/dla-trenującego'
+    },
+    {
+      name: 'Pomoc',
+      href: '/pomoc'
+    }
+  ];
+
   return (
     <header
       className={cn(scroll && 'bg-white', 'fixed top-0 w-full transition-all')}
@@ -42,21 +57,11 @@ export default function Header() {
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <Link href="/dla-trenera" className="text-sm leading-6 text-gray-900">
-            Dla trenerów
-          </Link>
-          <Link
-            href="/dla-trenujacego"
-            className="text-sm leading-6 text-gray-900"
-          >
-            Dla trenujących
-          </Link>
-          <Link href="/pomoc" className="text-sm leading-6 text-gray-900">
-            Pomoc
-          </Link>
-          <Link href="/trener-pro" className="text-sm leading-6 text-gray-900">
-            Trener Pro
-          </Link>
+          {menuLinks.map((item, index) => (
+            <Link key={index} href={item.href} className="text-sm font-medium">
+              {item.name}
+            </Link>
+          ))}
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <UserLogin />
