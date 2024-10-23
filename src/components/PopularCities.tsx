@@ -47,13 +47,13 @@ const PopularCities = () => {
 
   return (
     <div>
-      <p className="text-xs text-slate-800">Popularne miasta:</p>
-      <ul className="flex gap-5 mt-1">
+      <p className="text-xs">Popularne miasta:</p>
+      <ul className="flex gap-3 mt-1">
         {cities?.map((city, index) => (
           <li key={index}>
             <Link
               href={`/miasto/${city.city}`}
-              className="hover:text-trenerBlue hover:underline underline-offset-2 text-sm font-medium"
+              className="hover:text-trenerBlue text-sm font-medium"
             >
               {city.location}
             </Link>
