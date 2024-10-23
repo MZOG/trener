@@ -44,7 +44,7 @@ export default function Header() {
         className="mx-auto flex max-w-6xl items-center justify-between p-6"
       >
         <div className="flex lg:flex-1">
-          <Link href="/" className="-m-1.5 p-1.5">
+          <Link href="/">
             <span className="sr-only">Trener</span>
             Trener
           </Link>

@@ -8,4 +8,6 @@ export type Trainer = {
   location: string | null;
   slug: string | null;
   user_id: string | null;
+  is_pro: boolean;
+  price: boolean | null;
 };

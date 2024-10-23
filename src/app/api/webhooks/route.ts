@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       status: 400
     });
   }
-  // @ts-ignore
+  // @ts-expect-error not sure why it's complaining about email_addresses.
   const { id, email_addresses, first_name, last_name } = evt.data;
 
   const supabase = createClient(

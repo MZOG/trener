@@ -6,11 +6,26 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function slugify(str: string) {
-  str = str.replace(/^\s+|\s+$/g, ''); // trim leading/trailing white space
-  str = str.toLowerCase(); // convert string to lowercase
-  str = str
-    .replace(/[^a-z0-9 -]/g, '') // remove any non-alphanumeric characters
-    .replace(/\s+/g, '-') // replace spaces with hyphens
-    .replace(/-+/g, '-'); // remove consecutive hyphens
+  const fromChar = [
+    /ą/gi,
+    /ę/gi,
+    /ó/gi,
+    /ś/gi,
+    /ł/gi,
+    /ż/gi,
+    /ź/gi,
+    /ć/gi,
+    /ń/gi
+  ];
+  const toChar = ['a', 'e', 'o', 's', 'l', 'z', 'z', 'c', 'n'];
+  for (const i in fromChar) str = str.replace(fromChar[i], toChar[i]);
+  return str
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-') // Replace spaces with -
+    .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+    .replace(/\-\-+/g, '-') // Replace multiple - with single -
+    .replace(/^-+/, '') // Trim - from start of text
+    .replace(/-+$/, '');
   return str;
 }
