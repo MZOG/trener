@@ -1,60 +1,32 @@
-'use client';
+import { createClient } from '@/lib/supabase/ssr';
+import CityContent from '@/components/pages/city/CityContent';
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-import { Skeleton } from '@/components/ui/skeleton';
-import { createClient } from '@supabase/supabase-js';
-import { useState, useEffect } from 'react';
+export async function generateMetadata({ params }: Props) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from('users')
+    .select('location')
+    .eq('city', (await params).slug);
 
-const CityPage = ({ params }: { params: { slug: string } }) => {
-  const [loading, setLoading] = useState(true);
-  const [trainers, setTrainers] = useState();
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_KEY!
-  );
-
-  const getCity = async () => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('city', params.slug);
-
-    if (data) {
-      setTrainers(data); // type this
-      setLoading(false);
-    }
-
-    if (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getCity();
-  }, []); // fix?
-
-  if (loading) {
-    return (
-      <section className="px-5 max-w-6xl mx-auto">
-        <Skeleton className="h-20 w-full" />
-      </section>
-    );
+  if (error) {
+    return {};
   }
 
-  return (
-    <section className="px-5 max-w-6xl mx-auto">
-      <h1 className="text-4xl font-semibold">
-        Trenerzy personalni {trainers[0].location}
-      </h1>
+  if (data) {
+    return {
+      title: data[0]?.location || 'Brak trenerów',
+      description: data[0]?.location
+        ? `Trenerzy personalni ${data[0]?.location}`
+        : 'Brak trenerów'
+    };
+  }
+}
 
-      {trainers &&
-        trainers.map((trener, index) => (
-          <div key={index}>
-            <p>{trener.full_name}</p>
-          </div>
-        ))}
-    </section>
-  );
+const CityPage = ({ params }: { params: { slug: string } }) => {
+  return <CityContent slug={params.slug} />;
 };
 
 export default CityPage;

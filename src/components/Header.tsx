@@ -13,7 +13,7 @@ export default function Header() {
 
   useEffect(() => {
     window.addEventListener('scroll', () => {
-      setScroll(window.scrollY > 40);
+      setScroll(window.scrollY > 20);
     });
   }, []);
 
@@ -34,11 +34,14 @@ export default function Header() {
 
   return (
     <header
-      className={cn(scroll && 'bg-white', 'fixed top-0 w-full transition-all')}
+      className={cn(
+        scroll && 'bg-white',
+        'fixed top-0 w-full transition-all z-50'
+      )}
     >
       <nav
         aria-label="Global"
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex max-w-6xl items-center justify-between p-6"
       >
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
