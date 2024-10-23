@@ -22,7 +22,7 @@ const PopularCities = () => {
     const { data, error } = await supabase
       .from('users')
       .select('city, location')
-      .not('is_trainer', 'is', false)
+      .not('is_trainer', 'is', false || null)
       .not('city', 'is', null);
 
     if (data) {

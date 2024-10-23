@@ -26,7 +26,7 @@ const LatestTrainers = () => {
     const { data, error } = await supabase
       .from('users')
       .select('full_name, location')
-      .not('is_trainer', 'is', false) // ignore normal users
+      .not('is_trainer', 'is', false || null) // ignore normal users
       .not('location', 'is', null); // ignore trainers without location
 
     if (data) {

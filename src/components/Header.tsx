@@ -24,7 +24,7 @@ export default function Header() {
     },
     {
       name: 'Dla trenującego',
-      href: '/dla-trenującego'
+      href: '/dla-trenujacego'
     },
     {
       name: 'Pomoc',
