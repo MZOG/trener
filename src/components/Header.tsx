@@ -35,13 +35,16 @@ export default function Header() {
   return (
     <header
       className={cn(
-        scroll && 'bg-white',
+        scroll && 'bg-white/70 backdrop-blur-md',
         'fixed top-0 w-full transition-all z-50'
       )}
     >
       <nav
         aria-label="Global"
-        className="mx-auto flex max-w-6xl items-center justify-between p-6"
+        className={cn(
+          'mx-auto flex max-w-6xl items-center justify-between p-6 transition-all',
+          scroll && 'px-6 py-3'
+        )}
       >
         <div className="flex lg:flex-1">
           <Link href="/">

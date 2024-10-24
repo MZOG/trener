@@ -10,4 +10,6 @@ export type Trainer = {
   user_id: string | null;
   is_pro: boolean;
   price: boolean | null;
+  phone: string | null;
+  about: string | null;
 };

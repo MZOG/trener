@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const PanelPage = async () => {
   const user = await currentUser();
   if (user) {
-    return <ClientPage userID={user.id} />;
+    return <ClientPage userID={user.id} avatar={user.imageUrl} />;
   }
 };
 
