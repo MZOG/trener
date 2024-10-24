@@ -9,7 +9,7 @@ export type Trainer = {
   slug: string | null;
   user_id: string | null;
   is_pro: boolean;
-  price: boolean | null;
+  price: number | null;
   phone: string | null;
   about: string | null;
   instagram: string | null;

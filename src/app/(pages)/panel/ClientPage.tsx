@@ -17,17 +17,17 @@ import {
 } from '@heroicons/react/24/outline';
 import { Trainer } from '@/types/Trainer';
 import { Progress } from '@/components/ui/progress';
-// import {
-//   AlertDialog,
-//   AlertDialogAction,
-//   AlertDialogCancel,
-//   AlertDialogContent,
-//   AlertDialogDescription,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogTitle,
-//   AlertDialogTrigger
-// } from '@/components/ui/alert-dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { FancyMultiSelect } from '@/components/ui/fancy-multi-select';
 import Link from 'next/link';
@@ -99,24 +99,24 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     }
   };
 
-  const handleInstagram = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // @ts-expect-error prevState typing
     setUserInfo((prevState) => {
       return {
         ...prevState,
-        instagram: event.target.value
+        [event.target.name]: event.target.value
       };
     });
-  };
 
-  const handleFacebook = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // @ts-expect-error prevState typing
-    setUserInfo((prevState) => {
-      return {
-        ...prevState,
-        facebook: event.target.value
-      };
-    });
+    if (event.target.name === 'location') {
+      // @ts-expect-error prevState typing
+      setUserInfo((prevState) => {
+        return {
+          ...prevState,
+          city: slugify(event.target.value)
+        };
+      });
+    }
   };
 
   const handleUpdateProfile = async () => {
@@ -304,7 +304,63 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
             <div className="bg-white p-7 rounded-xl flex flex-col gap-4 border group">
               <div className="flex justify-between border-b pb-2">
                 <p className="font-medium">Informacje ogólne</p>
-                <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
+
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Informacje ogólne</AlertDialogTitle>
+                      <AlertDialogDescription className="space-y-3">
+                        <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
+                          <Label htmlFor="location" className="text-trenerDark">
+                            Miejscowość
+                          </Label>
+                          <Input
+                            onChange={handleChange}
+                            type="text"
+                            id="location"
+                            name="location"
+                            value={userInfo.location || ''}
+                          />
+                        </div>
+
+                        <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
+                          <Label htmlFor="phone" className="text-trenerDark">
+                            Numer telefonu
+                          </Label>
+                          <Input
+                            onChange={handleChange}
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            value={userInfo.phone || '-'}
+                          />
+                        </div>
+
+                        <div className="grid w-full max-w-sm items-center gap-1.5 mt-2">
+                          <Label htmlFor="price" className="text-trenerDark">
+                            Cena za godzinę
+                          </Label>
+                          <Input
+                            onChange={handleChange}
+                            type="number"
+                            id="price"
+                            name="price"
+                            value={userInfo.price || '-'}
+                          />
+                        </div>
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Anuluj</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleUpdateProfile}>
+                        Zapisz
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
 
               {userInfo.full_name && (
@@ -514,7 +570,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="instagram">Instagram</Label>
                   <Input
-                    onChange={handleInstagram}
+                    onChange={handleChange}
                     type="text"
                     id="instagram"
                     name="instagram"
@@ -526,7 +582,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="facebook">Facebook</Label>
                   <Input
-                    onChange={handleFacebook}
+                    onChange={handleChange}
                     type="text"
                     name="facebook"
                     id="facebook"
