@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -31,10 +31,12 @@ import { Progress } from '@/components/ui/progress';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { FancyMultiSelect } from '@/components/ui/fancy-multi-select';
 import Link from 'next/link';
-import { slugify } from '@/lib/utils';
+import { cn, slugify } from '@/lib/utils';
 
 // TipTap
-import TipTapEditor from '@/components/TipTapEditor';
+import TextAlign from '@tiptap/extension-text-align';
+import { EditorContent, useEditor, Editor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import { Label } from '@/components/ui/label';
 
 type ClientPageProps = {
@@ -43,10 +45,17 @@ type ClientPageProps = {
 };
 
 const ClientPage = ({ userID, avatar }: ClientPageProps) => {
-  const [selected, setSelected] = useState<boolean>();
   const [userInfo, setUserInfo] = useState<Trainer>();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
+  const [profileStrength, setProfileStrength] = useState({
+    mainInfo: true,
+    about: false,
+    specializations: false,
+    gallery: false,
+    social: false
+  });
+
   const { toast } = useToast();
 
   const supabase = createClient();
@@ -60,6 +69,29 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     if (data) {
       setUserInfo(data[0]);
       setLoading(false);
+
+      if (data[0].about === '<p></p>' || data[0].about === null) {
+        editor?.commands.setContent(
+          'Napisz coś o sobie (zaznacz tekst i kliknij pogrubienie aby pogrubić tekst)'
+        );
+      } else {
+        editor?.commands.setContent(data[0].about);
+        setProfileStrength((prevState) => {
+          return {
+            ...prevState,
+            about: true
+          };
+        });
+      }
+
+      if (data[0].instagram && data[0].facebook) {
+        setProfileStrength((prevState) => {
+          return {
+            ...prevState,
+            social: true
+          };
+        });
+      }
     }
 
     if (error) {
@@ -67,7 +99,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     }
   };
 
-  const handleInstagram = (event) => {
+  const handleInstagram = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // @ts-expect-error prevState typing
     setUserInfo((prevState) => {
       return {
         ...prevState,
@@ -76,7 +109,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     });
   };
 
-  const handleFacebook = (event) => {
+  const handleFacebook = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // @ts-expect-error prevState typing
     setUserInfo((prevState) => {
       return {
         ...prevState,
@@ -110,7 +144,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   };
 
   const selectAccountType = async (isTrainer: boolean) => {
-    setSelected(true);
     setLoading(true);
     const { data, error } = await supabase
       .from('users')
@@ -128,6 +161,59 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     if (data) {
       setLoading(false);
     }
+  };
+
+  // TipTap Editor
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      TextAlign.configure({
+        types: ['paragraph']
+      })
+    ],
+    onUpdate({ editor }) {
+      // @ts-expect-error prevState typing
+      setUserInfo((prevState) => {
+        return {
+          ...prevState,
+          about: editor?.getHTML()
+        };
+      });
+    },
+    editorProps: {
+      attributes: {
+        class:
+          'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none'
+      }
+    }
+  }) as Editor;
+
+  // @ts-expect-error editor typing..
+  const MenuBar = ({ editor }) => {
+    if (!editor) {
+      return null;
+    }
+
+    return (
+      <div className="control-group">
+        <div className="flex gap-3 border-b pb-3 mb-3">
+          <Button
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            className={editor.isActive('bold') ? 'is-active' : ''}
+            variant={editor.isActive('bold') ? 'secondary' : 'outline'}
+          >
+            Pogrubienie
+          </Button>
+          <Button
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            className={editor.isActive('italic') ? 'is-active' : ''}
+            variant={editor.isActive('italic') ? 'secondary' : 'outline'}
+          >
+            Kursywa
+          </Button>
+        </div>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -252,27 +338,50 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <CheckCircleIcon className="h-6 w-6 text-trenerBlue" />
-                  <p className="font-medium text-trenerBlue">
-                    Informacje ogólne
-                  </p>
+                <div
+                  className={cn(
+                    'flex items-center gap-2 text-gray-400',
+                    profileStrength.mainInfo && 'text-trenerBlue'
+                  )}
+                >
+                  <CheckCircleIcon className="h-6 w-6" />
+                  <p className="font-medium">Informacje ogólne</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <ExclamationCircleIcon className="h-6 w-6 text-gray-400" />
-                  <p className="font-medium text-gray-400">O mnie</p>
+                <div
+                  className={cn(
+                    'flex items-center gap-2 text-gray-400',
+                    profileStrength.about && 'text-trenerBlue'
+                  )}
+                >
+                  <ExclamationCircleIcon className="h-6 w-6" />
+                  <p className="font-medium">O mnie</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <ExclamationCircleIcon className="h-6 w-6 text-gray-400" />
-                  <p className="font-medium text-gray-400">Specjalizacje</p>
+                <div
+                  className={cn(
+                    'flex items-center gap-2 text-gray-400',
+                    profileStrength.specializations && 'text-trenerBlue'
+                  )}
+                >
+                  <ExclamationCircleIcon className="h-6 w-6" />
+                  <p className="font-medium">Specjalizacje</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <ExclamationCircleIcon className="h-6 w-6 text-gray-400" />
-                  <p className="font-medium text-gray-400">Galeria zdjęć</p>
+                <div
+                  className={cn(
+                    'flex items-center gap-2 text-gray-400',
+                    profileStrength.gallery && 'text-trenerBlue'
+                  )}
+                >
+                  <ExclamationCircleIcon className="h-6 w-6" />
+                  <p className="font-medium">Galeria zdjęć</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <ExclamationCircleIcon className="h-6 w-6 text-gray-400" />
-                  <p className="font-medium text-gray-400">Social media</p>
+                <div
+                  className={cn(
+                    'flex items-center gap-2 text-gray-400',
+                    profileStrength.social && 'text-trenerBlue'
+                  )}
+                >
+                  <ExclamationCircleIcon className="h-6 w-6" />
+                  <p className="font-medium">Social media</p>
                 </div>
               </div>
             </div>
@@ -331,7 +440,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
           {/* Panel content */}
           <section className="w-full space-y-5">
             <PanelCard title="O mnie" editable={false}>
-              <TipTapEditor />
+              <MenuBar editor={editor} />
+              <EditorContent editor={editor} />
             </PanelCard>
             <PanelCard title="Specjalizacje (0/5)" editable={false} unlock>
               <div>

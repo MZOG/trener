@@ -6,7 +6,7 @@ import { slugify } from '@/lib/utils';
 import { StarIcon } from '@heroicons/react/24/solid';
 
 const TrainerCard = ({ trainer }: { trainer: Trainer }) => {
-  const { full_name, is_pro, price } = trainer;
+  const { full_name, is_pro, price, about } = trainer;
   const slug = slugify(full_name || '');
 
   return (
@@ -25,41 +25,48 @@ const TrainerCard = ({ trainer }: { trainer: Trainer }) => {
       <Skeleton className="w-[250px] h-[250px] rounded-lg bg-primary/50"></Skeleton>
       <div className="px-3 space-y-2 mt-3">
         <h2 className="font-semibold text-[17px]">{full_name}</h2>
-        <p>opis</p>
+        <div
+          className="line-clamp-2"
+          dangerouslySetInnerHTML={{ __html: about || '' }}
+        />
         <div className="flex justify-between items-center pb-3">
-          <div className="flex">
-            <StarIcon
-              className={cn(
-                'h-5 w-5 text-trenerBlue',
-                is_pro && 'h-5 w-5 text-white'
-              )}
-            />
-            <StarIcon
-              className={cn(
-                'h-5 w-5 text-trenerBlue',
-                is_pro && 'h-5 w-5 text-white'
-              )}
-            />
-            <StarIcon
-              className={cn(
-                'h-5 w-5 text-trenerBlue',
-                is_pro && 'h-5 w-5 text-white'
-              )}
-            />
-            <StarIcon
-              className={cn(
-                'h-5 w-5 text-trenerBlue',
-                is_pro && 'h-5 w-5 text-white'
-              )}
-            />
-            <StarIcon
-              className={cn(
-                'h-5 w-5 text-trenerBlue',
-                is_pro && 'h-5 w-5 text-white'
-              )}
-            />
-          </div>
-          <p>{price && <p className="font-semibold">{price} zł /h</p>}</p>
+          {is_pro && (
+            <div className="flex">
+              <StarIcon
+                className={cn(
+                  'h-5 w-5 text-trenerBlue',
+                  is_pro && 'h-5 w-5 text-white'
+                )}
+              />
+              <StarIcon
+                className={cn(
+                  'h-5 w-5 text-trenerBlue',
+                  is_pro && 'h-5 w-5 text-white'
+                )}
+              />
+              <StarIcon
+                className={cn(
+                  'h-5 w-5 text-trenerBlue',
+                  is_pro && 'h-5 w-5 text-white'
+                )}
+              />
+              <StarIcon
+                className={cn(
+                  'h-5 w-5 text-trenerBlue',
+                  is_pro && 'h-5 w-5 text-white'
+                )}
+              />
+              <StarIcon
+                className={cn(
+                  'h-5 w-5 text-trenerBlue',
+                  is_pro && 'h-5 w-5 text-white'
+                )}
+              />
+            </div>
+          )}
+          <p>
+            {price && <p className="font-semibold self-end">{price} zł /h</p>}
+          </p>
         </div>
       </div>
     </Link>
