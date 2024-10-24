@@ -8,14 +8,19 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import Container from '@/components/Container';
 import {
+  CheckIcon,
   PencilIcon,
   CheckCircleIcon,
-  ExclamationCircleIcon
+  ExclamationCircleIcon,
+  LockClosedIcon,
+  EyeIcon
 } from '@heroicons/react/24/outline';
 import { Trainer } from '@/types/Trainer';
 import { Progress } from '@/components/ui/progress';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { FancyMultiSelect } from '@/components/ui/fancy-multi-select';
+import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 
 type ClientPageProps = {
   userID: string;
@@ -109,8 +114,19 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
   if (userInfo?.is_trainer) {
     return (
-      <Container className="flex gap-5">
-        <>
+      <>
+        <Container className="flex justify-end mt-5 mb-5">
+          <Link
+            href={`/trener/${slugify(userInfo.full_name || '')}`}
+            className="flex items-center gap-2 group"
+          >
+            <EyeIcon className="w-6 h-6" />
+            <p className="group-hover:underline underline-offset-4">
+              Zobacz jak wygląda Twój profil
+            </p>
+          </Link>
+        </Container>
+        <Container className="flex gap-5 mb-10">
           <aside className="min-w-[350px] space-y-5">
             <div className="bg-white p-7 rounded-xl flex flex-col gap-4 border group">
               <div className="flex justify-between border-b pb-2">
@@ -194,14 +210,61 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 </div>
               </div>
             </div>
+
+            {/* Trener PRO */}
+            {!userInfo.is_pro ? (
+              <div className="p-7 bg-trenerBlue rounded-lg text-white">
+                <p className="font-semibold">Trener PRO</p>
+
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <CheckIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">
+                      Wyróżnij profil na stronie miasta
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">Promocja w social media</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">Oceny i opinie trenera</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">Więcej specjalizacji</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">Galeria +</p>
+                  </div>
+                  <div className="flex items-center gap-2 opacity-50">
+                    <LockClosedIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">Wiadomości prywatne</p>
+                  </div>
+                  <div className="flex items-center gap-2 opacity-50">
+                    <LockClosedIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">Tworzenie planów treningowych</p>
+                  </div>
+                  <div className="flex items-center gap-2 opacity-50">
+                    <LockClosedIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">Raporty</p>
+                  </div>
+                  <div className="flex items-center gap-2 opacity-50">
+                    <LockClosedIcon className="w-5 h-5 text-white" />
+                    <p className="font-medium">Kalendarz</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>jesteś Trener PRO</div>
+            )}
           </aside>
 
+          {/* Panel content */}
           <section className="w-full space-y-5">
-            <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
-              <div className="flex justify-between border-b pb-2">
-                <p className="font-medium">O mnie</p>
-                <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
-              </div>
+            <PanelCard title="O mnie" editable>
               {userInfo.about ? (
                 <p>about text from supabase</p>
               ) : (
@@ -214,31 +277,29 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                   </Button>
                 </div>
               )}
-            </div>
-            <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
-              <div className="flex justify-between border-b pb-2">
-                <p className="font-medium">Specjalizacje</p>
-                <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
-              </div>
+            </PanelCard>
+            <PanelCard title="Specjalizacje (0/5)" editable={false} unlock>
               <div>
                 <FancyMultiSelect />
+                <p className="text-xs hover:text-trenerBlue inline-flex font-medium cursor-pointer">
+                  Brak Twojej specjalizacji? (modal)
+                </p>
               </div>
-            </div>
-            <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
-              <div className="flex justify-between border-b pb-2">
-                <p className="font-medium">Galeria zdjęć</p>
-                <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
+            </PanelCard>
+            <PanelCard title="Galeria zdjęć (0/4)" editable unlock>
+              <div className="grid gap-3 grid-cols-4">
+                <Skeleton className="w-[150px] h-[150px]" />
+                <Skeleton className="w-[150px] h-[150px]" />
+                <Skeleton className="w-[150px] h-[150px]" />
+                <Skeleton className="w-[150px] h-[150px]" />
               </div>
-            </div>
-            <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
-              <div className="flex justify-between border-b pb-2">
-                <p className="font-medium">Social media</p>
-                <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
-              </div>
-            </div>
+            </PanelCard>
+            <PanelCard title="Social media" editable>
+              <div>social media content</div>
+            </PanelCard>
           </section>
-        </>
-      </Container>
+        </Container>
+      </>
     );
   } else {
     return (
@@ -249,6 +310,39 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       </div>
     );
   }
+};
+
+const PanelCard = ({
+  unlock,
+  title,
+  editable,
+  children
+}: {
+  unlock?: boolean;
+  title: string;
+  editable: boolean;
+  children: JSX.Element;
+}) => {
+  return (
+    <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
+      <div className="flex justify-between border-b pb-2">
+        <p className="font-medium">
+          {title}{' '}
+          {unlock && (
+            <Button asChild variant="ghost" className="ml-5 text-gray-300">
+              <Link href="/trener-pro" className="text-sm font-normal">
+                Odblokuj funkcję - Trener PRO
+              </Link>
+            </Button>
+          )}
+        </p>
+        {editable && (
+          <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
+        )}
+      </div>
+      <div>{children}</div>
+    </div>
+  );
 };
 
 export default ClientPage;

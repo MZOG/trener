@@ -15,7 +15,10 @@ const UserLogin = () => {
       <SignedIn>
         <div className="flex items-center gap-4">
           <UserButton />
-          <Link href="/panel" className="text-sm font-medium">
+          <Link
+            href="/panel"
+            className="text-sm font-medium hover:text-trenerBlue"
+          >
             Panel
           </Link>
         </div>

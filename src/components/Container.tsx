@@ -4,7 +4,7 @@ type ContainerProps = {
   className?: string;
   type?: string;
   width?: string;
-  children: JSX.Element;
+  children: React.ReactNode;
 };
 
 const Container = ({
