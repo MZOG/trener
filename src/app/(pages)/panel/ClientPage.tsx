@@ -218,6 +218,36 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
   useEffect(() => {
     getData();
+
+    // check profile strength
+    function checkStrength() {
+      const values = Object.values(profileStrength).filter(
+        (a) => a === true
+      ).length;
+
+      switch (values) {
+        case 1:
+          setProgress(20);
+          break;
+        case 2:
+          setProgress(40);
+          break;
+        case 3:
+          setProgress(60);
+          break;
+        case 4:
+          setProgress(80);
+          break;
+        case 5:
+          setProgress(100);
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    checkStrength();
   }, [loading]);
 
   if (loading) {
@@ -344,7 +374,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                     profileStrength.mainInfo && 'text-trenerBlue'
                   )}
                 >
-                  <CheckCircleIcon className="h-6 w-6" />
+                  {profileStrength.mainInfo ? (
+                    <CheckCircleIcon className="h-6 w-6" />
+                  ) : (
+                    <ExclamationCircleIcon className="h-6 w-6" />
+                  )}
                   <p className="font-medium">Informacje ogólne</p>
                 </div>
                 <div
@@ -353,7 +387,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                     profileStrength.about && 'text-trenerBlue'
                   )}
                 >
-                  <ExclamationCircleIcon className="h-6 w-6" />
+                  {profileStrength.about ? (
+                    <CheckCircleIcon className="h-6 w-6" />
+                  ) : (
+                    <ExclamationCircleIcon className="h-6 w-6" />
+                  )}
                   <p className="font-medium">O mnie</p>
                 </div>
                 <div
@@ -362,7 +400,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                     profileStrength.specializations && 'text-trenerBlue'
                   )}
                 >
-                  <ExclamationCircleIcon className="h-6 w-6" />
+                  {profileStrength.specializations ? (
+                    <CheckCircleIcon className="h-6 w-6" />
+                  ) : (
+                    <ExclamationCircleIcon className="h-6 w-6" />
+                  )}
                   <p className="font-medium">Specjalizacje</p>
                 </div>
                 <div
@@ -371,7 +413,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                     profileStrength.gallery && 'text-trenerBlue'
                   )}
                 >
-                  <ExclamationCircleIcon className="h-6 w-6" />
+                  {profileStrength.gallery ? (
+                    <CheckCircleIcon className="h-6 w-6" />
+                  ) : (
+                    <ExclamationCircleIcon className="h-6 w-6" />
+                  )}
                   <p className="font-medium">Galeria zdjęć</p>
                 </div>
                 <div
@@ -380,7 +426,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                     profileStrength.social && 'text-trenerBlue'
                   )}
                 >
-                  <ExclamationCircleIcon className="h-6 w-6" />
+                  {profileStrength.social ? (
+                    <CheckCircleIcon className="h-6 w-6" />
+                  ) : (
+                    <ExclamationCircleIcon className="h-6 w-6" />
+                  )}
                   <p className="font-medium">Social media</p>
                 </div>
               </div>
