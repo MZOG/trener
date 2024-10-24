@@ -13,9 +13,9 @@ const UserLogin = () => {
         </SignInButton>
       </SignedOut>
       <SignedIn>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <UserButton />
-          <Link href="/panel" className="text-sm">
+          <Link href="/panel" className="text-sm font-medium">
             Panel
           </Link>
         </div>

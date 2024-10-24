@@ -15,6 +15,7 @@ import {
 import { Trainer } from '@/types/Trainer';
 import { Progress } from '@/components/ui/progress';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import { FancyMultiSelect } from '@/components/ui/fancy-multi-select';
 
 type ClientPageProps = {
   userID: string;
@@ -218,6 +219,9 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               <div className="flex justify-between border-b pb-2">
                 <p className="font-medium">Specjalizacje</p>
                 <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
+              </div>
+              <div>
+                <FancyMultiSelect />
               </div>
             </div>
             <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
