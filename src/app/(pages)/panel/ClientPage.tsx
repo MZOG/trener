@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import Container from '@/components/Container';
 import {
@@ -17,10 +17,25 @@ import {
 } from '@heroicons/react/24/outline';
 import { Trainer } from '@/types/Trainer';
 import { Progress } from '@/components/ui/progress';
+// import {
+//   AlertDialog,
+//   AlertDialogAction,
+//   AlertDialogCancel,
+//   AlertDialogContent,
+//   AlertDialogDescription,
+//   AlertDialogFooter,
+//   AlertDialogHeader,
+//   AlertDialogTitle,
+//   AlertDialogTrigger
+// } from '@/components/ui/alert-dialog';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { FancyMultiSelect } from '@/components/ui/fancy-multi-select';
 import Link from 'next/link';
 import { slugify } from '@/lib/utils';
+
+// TipTap
+import TipTapEditor from '@/components/TipTapEditor';
+import { Label } from '@/components/ui/label';
 
 type ClientPageProps = {
   userID: string;
@@ -49,6 +64,48 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
     if (error) {
       console.log(error);
+    }
+  };
+
+  const handleInstagram = (event) => {
+    setUserInfo((prevState) => {
+      return {
+        ...prevState,
+        instagram: event.target.value
+      };
+    });
+  };
+
+  const handleFacebook = (event) => {
+    setUserInfo((prevState) => {
+      return {
+        ...prevState,
+        facebook: event.target.value
+      };
+    });
+  };
+
+  const handleUpdateProfile = async () => {
+    const { data, error } = await supabase
+      .from('users')
+      .update(userInfo)
+      .eq('user_id', userID)
+      .select();
+
+    if (error) {
+      console.log(error);
+
+      toast({
+        title: 'Ups..',
+        description: 'Coś poszło nie tak'
+      });
+    }
+
+    if (data) {
+      toast({
+        title: 'Fajnie',
+        description: 'Zmiany zostały zapisane'
+      });
     }
   };
 
@@ -152,19 +209,28 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 </div>
               )}
 
-              {userInfo.location && (
-                <div>
-                  <p className="text-sm text-slate-500">Miejscowość</p>
-                  <p className="font-medium">{userInfo.location}</p>
-                </div>
-              )}
+              <div>
+                <p className="text-sm text-slate-500">Miejscowość</p>
+                <p className="font-medium">
+                  {userInfo.location
+                    ? userInfo.location
+                    : 'Uzupełnij swoje miasto'}
+                </p>
+              </div>
 
-              {userInfo.phone && (
-                <div>
-                  <p className="text-sm text-slate-500">Numer telefonu</p>
-                  <p className="font-medium">{userInfo.phone}</p>
-                </div>
-              )}
+              <div>
+                <p className="text-sm text-slate-500">Numer telefonu</p>
+                <p className="font-medium">
+                  {userInfo.phone ? userInfo.phone : '-'}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-slate-500">Cena za godzinę</p>
+                <p className="font-medium">
+                  {userInfo.price ? `${userInfo.price} zł` : '-'}{' '}
+                </p>
+              </div>
             </div>
 
             <div className="bg-white p-7 rounded-xl flex flex-col gap-4 border group">
@@ -258,25 +324,14 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 </div>
               </div>
             ) : (
-              <div>jesteś Trener PRO</div>
+              <div>Jesteś Trener PRO!</div>
             )}
           </aside>
 
           {/* Panel content */}
           <section className="w-full space-y-5">
-            <PanelCard title="O mnie" editable>
-              {userInfo.about ? (
-                <p>about text from supabase</p>
-              ) : (
-                <div className="flex flex-col items-center gap-5 justify-center py-10">
-                  <p className="font-medium">
-                    Napisz kilka zdań o sobie, oraz swoim doświadczeniu
-                  </p>
-                  <Button variant="ghost" className="text-trenerBlue">
-                    + Dodaj opis
-                  </Button>
-                </div>
-              )}
+            <PanelCard title="O mnie" editable={false}>
+              <TipTapEditor />
             </PanelCard>
             <PanelCard title="Specjalizacje (0/5)" editable={false} unlock>
               <div>
@@ -294,9 +349,36 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 <Skeleton className="w-[150px] h-[150px]" />
               </div>
             </PanelCard>
-            <PanelCard title="Social media" editable>
-              <div>social media content</div>
+            <PanelCard title="Social media" editable={false}>
+              <div className="space-y-4">
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <Label htmlFor="instagram">Instagram</Label>
+                  <Input
+                    onChange={handleInstagram}
+                    type="text"
+                    id="instagram"
+                    name="instagram"
+                    placeholder="np. mrcn"
+                    value={userInfo.instagram || ''}
+                  />
+                  <p className="text-sm">Nazwa np. mrcn</p>
+                </div>
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <Label htmlFor="facebook">Facebook</Label>
+                  <Input
+                    onChange={handleFacebook}
+                    type="text"
+                    name="facebook"
+                    id="facebook"
+                    placeholder="https://www.facebook.com/marcinzogrodnik1993/"
+                    value={userInfo.facebook || ''}
+                  />
+                  <p className="text-sm">Pełny link</p>
+                </div>
+              </div>
             </PanelCard>
+
+            <Button onClick={handleUpdateProfile}>Zapisz</Button>
           </section>
         </Container>
       </>
@@ -321,7 +403,7 @@ const PanelCard = ({
   unlock?: boolean;
   title: string;
   editable: boolean;
-  children: JSX.Element;
+  children: React.ReactNode;
 }) => {
   return (
     <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">

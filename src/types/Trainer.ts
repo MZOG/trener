@@ -12,4 +12,6 @@ export type Trainer = {
   price: boolean | null;
   phone: string | null;
   about: string | null;
+  instagram: string | null;
+  facebook: string | null;
 };

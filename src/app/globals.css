@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.tiptap {
+  strong {
+    @apply font-medium;
+  }
+}
+
 .searchInput .wrapper input {
   padding-left: 20px !important;
 }
