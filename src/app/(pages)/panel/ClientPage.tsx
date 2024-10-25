@@ -48,9 +48,20 @@ type ClientPageProps = {
   avatar: string | StaticImport;
 };
 
+type GalleryImagesProps = {
+  name: string;
+  bucket_id: string;
+  owner: string;
+  id: string;
+  updated_at: string;
+  created_at: string;
+  last_accessed_at: string;
+  metadata: Record<string, any>;
+};
+
 const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const [userInfo, setUserInfo] = useState<Trainer>();
-  const [gallery, setGallery] = useState<string[]>([]);
+  const [gallery, setGallery] = useState<GalleryImagesProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
   const [profileStrength, setProfileStrength] = useState({
@@ -199,19 +210,19 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const SUPABASE_CDN =
     'https://xjbdsomhlpvgiwtatfmp.supabase.co/storage/v1/object/public/gallery/';
 
-  const handleUploadImage = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files[0];
-    const { data, error } = await supabase.storage
-      .from('gallery')
-      .upload(userInfo?.id + '/' + uuidv4(), file);
+  const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e?.target?.files[0];
+      const { data, error } = await supabase.storage
+        .from('gallery')
+        .upload(userInfo?.id + '/' + uuidv4(), file);
 
-    if (data) {
-      getImages();
-      checkStrength();
-    } else {
-      console.log(error);
+      if (data) {
+        getImages();
+        checkStrength();
+      } else {
+        console.log(error);
+      }
     }
   };
 
@@ -648,7 +659,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               )}
             </PanelCard>
             <PanelCard title="Social media" editable={false}>
-              <div className="space-y-4">
+              <div className="flex gap-4 items-center">
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="instagram">Instagram</Label>
                   <Input
