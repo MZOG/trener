@@ -38,6 +38,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import { EditorContent, useEditor, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 
 type ClientPageProps = {
   userID: string;
@@ -322,6 +323,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                             type="text"
                             id="location"
                             name="location"
+                            className="text-trenerDark"
                             value={userInfo.location || ''}
                           />
                         </div>
@@ -335,6 +337,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                             type="text"
                             id="phone"
                             name="phone"
+                            className="text-trenerDark"
                             value={userInfo.phone || '-'}
                           />
                         </div>
@@ -348,6 +351,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                             type="number"
                             id="price"
                             name="price"
+                            className="text-trenerDark"
                             value={userInfo.price || '-'}
                           />
                         </div>
@@ -376,7 +380,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                   ) : (
                     <Skeleton className="w-20 h-20 rounded-full" />
                   )}
-
                   <p className="font-medium">{userInfo.full_name}</p>
                 </div>
               )}
@@ -400,9 +403,17 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               <div>
                 <p className="text-sm text-slate-500">Cena za godzinę</p>
                 <p className="font-medium">
-                  {userInfo.price ? `${userInfo.price} zł` : '-'}{' '}
+                  {userInfo.price ? `${userInfo.price} zł` : '-'}
                 </p>
               </div>
+
+              {userInfo.is_pro && (
+                <div>
+                  <p className="text-sm text-trenerBlue font-medium">
+                    Trener PRO
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="bg-white p-7 rounded-xl flex flex-col gap-4 border group">
@@ -419,7 +430,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               <div className="bg-trenerBlue px-3 py-2 rounded-lg">
                 <p className="text-sm font-medium text-white ">
                   Uzupełnione profile zyskują{' '}
-                  <span className="block font-bold">3x więcej wyświetleń</span>
+                  <span className="block font-bold">więcej wyświetleń</span>
                 </p>
               </div>
 
@@ -493,54 +504,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
             </div>
 
             {/* Trener PRO */}
-            {!userInfo.is_pro ? (
-              <div className="p-7 bg-trenerBlue rounded-lg text-white">
-                <p className="font-semibold">Trener PRO</p>
-
-                <div className="mt-4 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">
-                      Wyróżnij profil na stronie miasta
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">Promocja w social media</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">Oceny i opinie trenera</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">Więcej specjalizacji</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">Galeria +</p>
-                  </div>
-                  <div className="flex items-center gap-2 opacity-50">
-                    <LockClosedIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">Wiadomości prywatne</p>
-                  </div>
-                  <div className="flex items-center gap-2 opacity-50">
-                    <LockClosedIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">Tworzenie planów treningowych</p>
-                  </div>
-                  <div className="flex items-center gap-2 opacity-50">
-                    <LockClosedIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">Raporty</p>
-                  </div>
-                  <div className="flex items-center gap-2 opacity-50">
-                    <LockClosedIcon className="w-5 h-5 text-white" />
-                    <p className="font-medium">Kalendarz</p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div>Jesteś Trener PRO!</div>
-            )}
+            <ProFeatures is_pro={userInfo.is_pro} />
           </aside>
 
           {/* Panel content */}
@@ -549,7 +513,12 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               <MenuBar editor={editor} />
               <EditorContent editor={editor} />
             </PanelCard>
-            <PanelCard title="Specjalizacje (0/5)" editable={false} unlock>
+            <PanelCard
+              title={userInfo.is_pro ? 'Specjalizacje' : 'Specjalizacje (0/5)'}
+              editable={false}
+              unlock
+              is_pro={userInfo.is_pro}
+            >
               <div>
                 <FancyMultiSelect />
                 <p className="text-xs hover:text-trenerBlue inline-flex font-medium cursor-pointer">
@@ -557,7 +526,12 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 </p>
               </div>
             </PanelCard>
-            <PanelCard title="Galeria zdjęć (0/4)" editable unlock>
+            <PanelCard
+              title={userInfo.is_pro ? 'Galeria zdjęć' : 'Galeria zdjęć (0/4)'}
+              editable
+              unlock
+              is_pro={userInfo.is_pro}
+            >
               <div className="grid gap-3 grid-cols-4">
                 <Skeleton className="w-[150px] h-[150px]" />
                 <Skeleton className="w-[150px] h-[150px]" />
@@ -614,19 +588,21 @@ const PanelCard = ({
   unlock,
   title,
   editable,
-  children
+  children,
+  is_pro
 }: {
   unlock?: boolean;
   title: string;
   editable: boolean;
   children: React.ReactNode;
+  is_pro?: boolean;
 }) => {
   return (
     <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
       <div className="flex justify-between border-b pb-2">
         <p className="font-medium">
           {title}{' '}
-          {unlock && (
+          {unlock && !is_pro && (
             <Button asChild variant="ghost" className="ml-5 text-gray-300">
               <Link href="/trener-pro" className="text-sm font-normal">
                 Odblokuj funkcję - Trener PRO
@@ -639,6 +615,95 @@ const PanelCard = ({
         )}
       </div>
       <div>{children}</div>
+    </div>
+  );
+};
+
+const ProFeatures = ({ is_pro }: { is_pro: boolean }) => {
+  const FEATURES = [
+    {
+      id: 1,
+      name: 'Wyróżnij profil na stronie miasta',
+      disabled: false
+    },
+    {
+      id: 2,
+      name: 'Promocja w social media',
+      disabled: false
+    },
+    {
+      id: 3,
+      name: 'Oceny i opinie trenera',
+      disabled: false
+    },
+    {
+      id: 4,
+      name: 'Więcej specjalizacji',
+      disabled: false
+    },
+    {
+      id: 5,
+      name: 'Galeria +',
+      disabled: false
+    },
+    {
+      id: 6,
+      name: 'Tworzenie planów treningowych',
+      disabled: true
+    },
+    {
+      id: 7,
+      name: 'Wiadomości prywatne',
+      disabled: true
+    },
+    {
+      id: 8,
+      name: 'Raporty',
+      disabled: true
+    },
+    {
+      id: 9,
+      name: 'Kalendarz',
+      disabled: true
+    }
+  ];
+
+  if (!is_pro) {
+    return (
+      <div className="p-7 bg-trenerBlue rounded-lg text-white">
+        <div className="flex justify-between items-center">
+          <p className="font-semibold">Trener PRO</p>
+          <Button asChild variant="secondary_pro">
+            <Link href="/trener-pro">Kup za 39 zł</Link>
+          </Button>
+        </div>
+
+        <div className="mt-4 space-y-2">
+          {FEATURES.map((feature) => (
+            <div
+              key={feature.id}
+              className={cn(
+                'flex items-center gap-2',
+                feature.disabled && 'opacity-50'
+              )}
+            >
+              {feature.disabled ? (
+                <LockClosedIcon className="w-5 h-5 text-white" />
+              ) : (
+                <CheckIcon className="w-5 h-5 text-white" />
+              )}
+              <p className="font-medium">{feature.name}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-7 bg-trenerBlue rounded-lg text-white">
+      <p className="font-medium">Trener PRO jest aktywny</p>
+      <p className="text-xs">Zarządzaj subskrypcją (link do easycart)</p>
     </div>
   );
 };

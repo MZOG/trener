@@ -26,7 +26,7 @@ const TrainerCard = ({ trainer }: { trainer: Trainer }) => {
       <div className="px-3 space-y-2 mt-3">
         <h2 className="font-semibold text-[17px]">{full_name}</h2>
         <div
-          className="line-clamp-2"
+          className="line-clamp-2 text-sm"
           dangerouslySetInnerHTML={{ __html: about || '' }}
         />
         <div className="flex justify-between items-center pb-3">
