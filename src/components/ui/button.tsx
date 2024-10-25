@@ -22,6 +22,7 @@ const buttonVariants = cva(
         secondary_pro: 'bg-white text-trenerBlue shadow-sm hover:bg-white/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
+        red: 'bg-red-700 hover:bg-red-700/80',
         citySearch:
           'text-base bg-trenerBlue leading-none text-white font-semibold rounded-lg  hover:bg-trenerBlue/90'
       },
@@ -30,7 +31,8 @@ const buttonVariants = cva(
         sm: 'rounded-md px-3 text-xs',
         lg: 'h-10 rounded-md px-8',
         icon: 'h-9 w-9',
-        citySearch: 'h-12 px-4'
+        citySearch: 'h-12 px-4',
+        red: 'p-1'
       }
     },
     defaultVariants: {

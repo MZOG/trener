@@ -6,9 +6,9 @@ const UserLogin = () => {
   return (
     <>
       <SignedOut>
-        <SignInButton>
+        <SignInButton fallbackRedirectUrl="/panel">
           <Button className="text-sm" variant="outline">
-            Zaloguj się
+            Panel trenera
           </Button>
         </SignInButton>
       </SignedOut>

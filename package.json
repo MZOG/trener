@@ -42,7 +42,8 @@
     "react-search-autocomplete": "^8.5.2",
     "svix": "^1.37.0",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -23,6 +23,8 @@ export default function RootLayout({
   return (
     <ClerkProvider
       localization={plPL}
+      signInFallbackRedirectUrl="/panel"
+      signUpFallbackRedirectUrl="/panel"
       appearance={{
         layout: {
           // termsPageUrl: '/terms',

@@ -25,10 +25,6 @@ export default function Header() {
     {
       name: 'Dla trenującego',
       href: '/dla-trenujacego'
-    },
-    {
-      name: 'Pomoc',
-      href: '/pomoc'
     }
   ];
 
@@ -47,7 +43,7 @@ export default function Header() {
         )}
       >
         <div className="flex lg:flex-1">
-          <Link href="/">
+          <Link href="/" className="text-sm font-medium">
             <span className="sr-only">Trener</span>
             Trener
           </Link>

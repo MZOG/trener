@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,9 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   LockClosedIcon,
-  EyeIcon
+  EyeIcon,
+  TrashIcon,
+  CloudArrowUpIcon
 } from '@heroicons/react/24/outline';
 import { Trainer } from '@/types/Trainer';
 import { Progress } from '@/components/ui/progress';
@@ -47,6 +50,7 @@ type ClientPageProps = {
 
 const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const [userInfo, setUserInfo] = useState<Trainer>();
+  const [gallery, setGallery] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
   const [profileStrength, setProfileStrength] = useState({
@@ -67,16 +71,26 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       .select('*')
       .eq('user_id', userID);
 
+    if (error) {
+      console.log(error);
+    }
+
     if (data) {
       setUserInfo(data[0]);
       setLoading(false);
 
+      // This one if for non trainers users
+      if (data.length === 0) return;
+
+      // Set the content for TipTap editor
       if (data[0].about === '<p></p>' || data[0].about === null) {
         editor?.commands.setContent(
           'Napisz coś o sobie (zaznacz tekst i kliknij pogrubienie aby pogrubić tekst)'
         );
       } else {
         editor?.commands.setContent(data[0].about);
+
+        // Set profile strength if about section is filled
         setProfileStrength((prevState) => {
           return {
             ...prevState,
@@ -85,6 +99,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
         });
       }
 
+      // Both instagram and facebook should be filled
       if (data[0].instagram && data[0].facebook) {
         setProfileStrength((prevState) => {
           return {
@@ -93,10 +108,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
           };
         });
       }
-    }
-
-    if (error) {
-      console.log(error);
     }
   };
 
@@ -128,8 +139,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       .select();
 
     if (error) {
-      console.log(error);
-
       toast({
         title: 'Ups..',
         description: 'Coś poszło nie tak'
@@ -161,6 +170,61 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
     if (data) {
       setLoading(false);
+    }
+  };
+
+  const getImages = async () => {
+    const { data } = await supabase.storage
+      .from('gallery')
+      .list(userInfo?.id + '/', {
+        limit: 4,
+        offset: 0,
+        sortBy: { column: 'name', order: 'asc' }
+      });
+
+    if (data !== null && data.length > 0) {
+      setGallery(data);
+
+      setProfileStrength((prevState) => {
+        return {
+          ...prevState,
+          gallery: true
+        };
+      });
+
+      checkStrength();
+    }
+  };
+
+  const SUPABASE_CDN =
+    'https://xjbdsomhlpvgiwtatfmp.supabase.co/storage/v1/object/public/gallery/';
+
+  const handleUploadImage = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files[0];
+    const { data, error } = await supabase.storage
+      .from('gallery')
+      .upload(userInfo?.id + '/' + uuidv4(), file);
+
+    if (data) {
+      getImages();
+      checkStrength();
+    } else {
+      console.log(error);
+    }
+  };
+
+  const handleRemoveImage = async (imageName: string) => {
+    const { error } = await supabase.storage
+      .from('gallery')
+      .remove([userInfo?.id + '/' + imageName]);
+
+    if (error) {
+      console.log(error);
+    } else {
+      getImages();
+      checkStrength();
     }
   };
 
@@ -219,37 +283,42 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
   useEffect(() => {
     getData();
-
-    // check profile strength
-    function checkStrength() {
-      const values = Object.values(profileStrength).filter(
-        (a) => a === true
-      ).length;
-
-      switch (values) {
-        case 1:
-          setProgress(20);
-          break;
-        case 2:
-          setProgress(40);
-          break;
-        case 3:
-          setProgress(60);
-          break;
-        case 4:
-          setProgress(80);
-          break;
-        case 5:
-          setProgress(100);
-          break;
-
-        default:
-          break;
-      }
+    if (userInfo?.id) {
+      getImages();
     }
-
-    checkStrength();
   }, [loading]);
+
+  useEffect(() => {
+    checkStrength();
+  });
+
+  // check profile strength
+  function checkStrength() {
+    const values = Object.values(profileStrength).filter(
+      (a) => a === true
+    ).length;
+
+    switch (values) {
+      case 1:
+        setProgress(20);
+        break;
+      case 2:
+        setProgress(40);
+        break;
+      case 3:
+        setProgress(60);
+        break;
+      case 4:
+        setProgress(80);
+        break;
+      case 5:
+        setProgress(100);
+        break;
+
+      default:
+        break;
+    }
+  }
 
   if (loading) {
     return (
@@ -527,17 +596,56 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               </div>
             </PanelCard>
             <PanelCard
-              title={userInfo.is_pro ? 'Galeria zdjęć' : 'Galeria zdjęć (0/4)'}
-              editable
+              title={
+                userInfo.is_pro
+                  ? 'Galeria zdjęć'
+                  : `Galeria zdjęć (${gallery?.length}/4)`
+              }
+              editable={false}
               unlock
               is_pro={userInfo.is_pro}
             >
               <div className="grid gap-3 grid-cols-4">
-                <Skeleton className="w-[150px] h-[150px]" />
-                <Skeleton className="w-[150px] h-[150px]" />
-                <Skeleton className="w-[150px] h-[150px]" />
-                <Skeleton className="w-[150px] h-[150px]" />
+                {gallery?.map((image) => (
+                  <div
+                    key={SUPABASE_CDN + userInfo.id + '/' + image.name}
+                    className="space-y-2"
+                  >
+                    <Image
+                      src={SUPABASE_CDN + userInfo.id + '/' + image.name}
+                      alt={image.name}
+                      width={300}
+                      height={600}
+                      className="rounded-xl"
+                    />
+                    <Button
+                      variant="red"
+                      size="red"
+                      onClick={() => handleRemoveImage(image.name)}
+                    >
+                      <TrashIcon className="w-5 h-5 text-white" />
+                    </Button>
+                  </div>
+                ))}
               </div>
+
+              {gallery.length < 4 && (
+                <div className="mt-5">
+                  <label
+                    htmlFor="uploadFile1"
+                    className="flex items-center gap-2 text-sm font-medium bg-trenerBlue hover:bg-trenerBlue/80 text-white px-4 py-1.5 outline-none rounded-lg w-max cursor-pointer mx-auto"
+                  >
+                    <CloudArrowUpIcon className="w-6 h-6" />
+                    Dodaj zdjęcie
+                    <input
+                      type="file"
+                      id="uploadFile1"
+                      className="hidden"
+                      onChange={(e) => handleUploadImage(e)}
+                    />
+                  </label>
+                </div>
+              )}
             </PanelCard>
             <PanelCard title="Social media" editable={false}>
               <div className="space-y-4">
