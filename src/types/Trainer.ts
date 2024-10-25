@@ -14,4 +14,6 @@ export type Trainer = {
   about: string | null;
   instagram: string | null;
   facebook: string | null;
+  work_online: boolean | null;
+  specializations: string | null;
 };

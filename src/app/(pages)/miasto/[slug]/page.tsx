@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/ssr';
 import CityContent from '@/components/pages/city/CityContent';
+
 type Props = {
   params: Promise<{ slug: string }>;
 };

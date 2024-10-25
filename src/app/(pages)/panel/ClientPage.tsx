@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
@@ -31,6 +31,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
+import { X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList
+} from '@/components/ui/command';
+import { Command as CommandPrimitive } from 'cmdk';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { FancyMultiSelect } from '@/components/ui/fancy-multi-select';
 import Link from 'next/link';
@@ -41,7 +50,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import { EditorContent, useEditor, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+// import { CheckboxProps } from '@headlessui/react';
 
 type ClientPageProps = {
   userID: string;
@@ -59,11 +69,39 @@ type GalleryImagesProps = {
   metadata: Record<string, any>;
 };
 
+type SpecsProps = string;
+
+const SPECS = [
+  'Core & Stability',
+  'Cross training',
+  'Kulturystyka',
+  'Modelowanie sylwetki',
+  'Poprawa kondycji',
+  'Redukcja tkanki tłuszczowej',
+  'Trening przygotowania motorycznego',
+  'Trening dla kobiet',
+  'Trening kettlebal',
+  'Trening medyczny',
+  'Trening motoryczny',
+  'Trening ogólnorozwojowy',
+  'Trening po ciąży',
+  'Trening siłowy',
+  'Trening wydolnościowy',
+  'Trening wytrzymałościowy',
+  'Trening funkcjonalny',
+  'Trening wprowadzający',
+  'Zwiększenie siły mięśniowej'
+] satisfies SpecsProps[];
+
 const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const [userInfo, setUserInfo] = useState<Trainer>();
   const [gallery, setGallery] = useState<GalleryImagesProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState<SpecsProps[]>([]);
+  const [inputValue, setInputValue] = useState('');
   const [profileStrength, setProfileStrength] = useState({
     mainInfo: true,
     about: false,
@@ -73,6 +111,43 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   });
 
   const { toast } = useToast();
+
+  // MultiSelect
+  const handleUnselect = (specs: SpecsProps) => {
+    setSelected((prev) => prev.filter((s) => s !== specs));
+  };
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const input = inputRef.current;
+      if (input) {
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+          if (input.value === '') {
+            setSelected((prev) => {
+              const newSelected = [...prev];
+              newSelected.pop();
+
+              setUserInfo((prevState) => {
+                return {
+                  ...prevState,
+                  specializations: JSON.stringify(newSelected)
+                };
+              });
+
+              return newSelected;
+            });
+          }
+        }
+
+        if (e.key === 'Escape') {
+          input.blur();
+        }
+      }
+    },
+    []
+  );
+
+  const selectables = SPECS.filter((spec) => !selected.includes(spec));
 
   const supabase = createClient();
 
@@ -89,6 +164,16 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     if (data) {
       setUserInfo(data[0]);
       setLoading(false);
+
+      if (JSON.parse(data[0].specializations).length > 0) {
+        setSelected(JSON.parse(data[0].specializations || ''));
+        setProfileStrength((prevState) => {
+          return {
+            ...prevState,
+            specializations: true
+          };
+        });
+      }
 
       // This one if for non trainers users
       if (data.length === 0) return;
@@ -142,6 +227,16 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     }
   };
 
+  const handleWorkOnline = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // @ts-expect-error prevState typings
+    setUserInfo((prevState) => {
+      return {
+        ...prevState,
+        work_online: event
+      };
+    });
+  };
+
   const handleUpdateProfile = async () => {
     const { data, error } = await supabase
       .from('users')
@@ -161,6 +256,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
         title: 'Fajnie',
         description: 'Zmiany zostały zapisane'
       });
+
+      checkStrength();
     }
   };
 
@@ -435,6 +532,27 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                             value={userInfo.price || '-'}
                           />
                         </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id="work_online"
+                            name="work_online"
+                            onCheckedChange={(e) =>
+                              // @ts-expect-error event typing
+                              handleWorkOnline(e)
+                            }
+                            defaultChecked={
+                              userInfo?.work_online
+                                ? userInfo?.work_online
+                                : undefined
+                            }
+                          />
+                          <Label
+                            htmlFor="work_online"
+                            className="text-trenerDark"
+                          >
+                            Prowadzenie online
+                          </Label>
+                        </div>
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -487,6 +605,13 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 </p>
               </div>
 
+              <div>
+                <p className="text-sm text-slate-500">Prowadzenie online</p>
+                <p className="font-medium">
+                  {userInfo.work_online ? `Tak` : 'Nie'}
+                </p>
+              </div>
+
               {userInfo.is_pro && (
                 <div>
                   <p className="text-sm text-trenerBlue font-medium">
@@ -502,8 +627,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               </div>
 
               <div className="flex items-center justify-between gap-5">
-                <Skeleton className="w-8 h-8 rounded-full" />
-                <Progress value={progress} className="w-[60%]" />
+                <Progress value={progress} className="w-[80%]" />
                 <p className="font-medium">{progress}%</p>
               </div>
 
@@ -589,30 +713,146 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
           {/* Panel content */}
           <section className="w-full space-y-5">
-            <PanelCard title="O mnie" editable={false}>
+            {/* O mnie */}
+            <PanelCard title="O mnie">
               <MenuBar editor={editor} />
               <EditorContent editor={editor} />
             </PanelCard>
+
+            {/* Specjalizacje */}
             <PanelCard
-              title={userInfo.is_pro ? 'Specjalizacje' : 'Specjalizacje (0/5)'}
-              editable={false}
+              title={
+                userInfo.is_pro
+                  ? 'Specjalizacje'
+                  : `Specjalizacje (${selected.length}/5)`
+              }
               unlock
               is_pro={userInfo.is_pro}
             >
               <div>
-                <FancyMultiSelect />
+                <Command
+                  onKeyDown={handleKeyDown}
+                  className="overflow-visible bg-transparent"
+                >
+                  <div className="group rounded-md text-sm ">
+                    <div className="flex flex-wrap gap-1">
+                      {selected.map((spec, index) => {
+                        return (
+                          <Badge
+                            key={index}
+                            variant="specs"
+                            className="text-sm font-medium"
+                          >
+                            {spec}
+                            <button
+                              className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  handleUnselect(spec);
+                                  const newSpecs = selected.filter(
+                                    (s) => s !== spec
+                                  );
+                                  setUserInfo((prevState) => {
+                                    return {
+                                      ...prevState,
+                                      specializations: JSON.stringify(newSpecs)
+                                    };
+                                  });
+                                }
+                              }}
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }}
+                              onClick={() => {
+                                handleUnselect(spec);
+                                const newSpecs = selected.filter(
+                                  (s) => s !== spec
+                                );
+                                setUserInfo((prevState) => {
+                                  return {
+                                    ...prevState,
+                                    specializations: JSON.stringify(newSpecs)
+                                  };
+                                });
+                              }}
+                            >
+                              <X className="h-3.5 w-3.5 text-muted-foreground/60 hover:text-foreground" />
+                            </button>
+                          </Badge>
+                        );
+                      })}
+                      {/* Avoid having the "Search" Icon */}
+                      <div
+                        onBlur={() => setOpen(false)}
+                        onFocus={() => setOpen(true)}
+                      >
+                        {selected.length < 5 && (
+                          <CommandPrimitive.Input
+                            ref={inputRef}
+                            value={inputValue}
+                            onValueChange={setInputValue}
+                            onBlur={() => setOpen(false)}
+                            onFocus={() => setOpen(true)}
+                            placeholder="Kliknij aby wybrać"
+                            className="ml-2 flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="relative mt-2">
+                    <CommandList>
+                      {open && selectables.length > 0 ? (
+                        <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+                          <CommandGroup className="h-full overflow-auto">
+                            {selectables.map((specs) => {
+                              return (
+                                <CommandItem
+                                  key={specs}
+                                  onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                  }}
+                                  onSelect={() => {
+                                    setInputValue('');
+                                    setSelected((prev) => [...prev, specs]);
+
+                                    setUserInfo((prevState) => {
+                                      return {
+                                        ...prevState,
+                                        specializations: JSON.stringify([
+                                          ...selected,
+                                          specs
+                                        ])
+                                      };
+                                    });
+                                  }}
+                                  className={'cursor-pointer'}
+                                >
+                                  {specs}
+                                </CommandItem>
+                              );
+                            })}
+                          </CommandGroup>
+                        </div>
+                      ) : null}
+                    </CommandList>
+                  </div>
+                </Command>
                 <p className="text-xs hover:text-trenerBlue inline-flex font-medium cursor-pointer">
                   Brak Twojej specjalizacji? (modal)
                 </p>
               </div>
             </PanelCard>
+
+            {/* Galeria */}
             <PanelCard
               title={
                 userInfo.is_pro
                   ? 'Galeria zdjęć'
                   : `Galeria zdjęć (${gallery?.length}/4)`
               }
-              editable={false}
               unlock
               is_pro={userInfo.is_pro}
             >
@@ -658,7 +898,9 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 </div>
               )}
             </PanelCard>
-            <PanelCard title="Social media" editable={false}>
+
+            {/* Social media */}
+            <PanelCard title="Social media">
               <div className="flex gap-4 items-center">
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="instagram">Instagram</Label>
@@ -706,13 +948,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 const PanelCard = ({
   unlock,
   title,
-  editable,
   children,
   is_pro
 }: {
   unlock?: boolean;
   title: string;
-  editable: boolean;
   children: React.ReactNode;
   is_pro?: boolean;
 }) => {
@@ -729,9 +969,6 @@ const PanelCard = ({
             </Button>
           )}
         </p>
-        {editable && (
-          <PencilIcon className="w-5 h-5 hidden group-hover:block cursor-pointer" />
-        )}
       </div>
       <div>{children}</div>
     </div>
