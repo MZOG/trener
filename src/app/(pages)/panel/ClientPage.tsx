@@ -51,6 +51,8 @@ import { EditorContent, useEditor, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { revalidatePath } from 'next/cache';
+import { useRouter } from 'next/navigation';
 // import { CheckboxProps } from '@headlessui/react';
 
 type ClientPageProps = {
@@ -111,6 +113,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   });
 
   const { toast } = useToast();
+  const router = useRouter();
 
   // MultiSelect
   const handleUnselect = (specs: SpecsProps) => {
@@ -258,6 +261,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       });
 
       checkStrength();
+      router.refresh();
     }
   };
 
@@ -631,11 +635,17 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 <p className="font-medium">{progress}%</p>
               </div>
 
-              <div className="bg-trenerBlue px-3 py-2 rounded-lg">
-                <p className="text-sm font-medium text-white ">
-                  Uzupełnione profile zyskują{' '}
-                  <span className="block font-bold">więcej wyświetleń</span>
-                </p>
+              <div className="bg-trenerBlue px-3 py-3 rounded-lg">
+                {progress === 100 ? (
+                  <p className="text-sm font-semibold text-white ">
+                    Super! Twój profil jest kompletny
+                  </p>
+                ) : (
+                  <p className="text-sm font-medium text-white ">
+                    Uzupełnione profile zyskują{' '}
+                    <span className="block font-bold">więcej wyświetleń</span>
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
