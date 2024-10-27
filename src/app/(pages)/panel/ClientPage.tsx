@@ -126,7 +126,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
             setSelected((prev) => {
               const newSelected = [...prev];
               newSelected.pop();
-
+              // @ts-expect-error prevState typing
               setUserInfo((prevState) => {
                 return {
                   ...prevState,
@@ -752,6 +752,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                                   const newSpecs = selected.filter(
                                     (s) => s !== spec
                                   );
+                                  // @ts-expect-error prevState typing
                                   setUserInfo((prevState) => {
                                     return {
                                       ...prevState,
@@ -769,6 +770,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                                 const newSpecs = selected.filter(
                                   (s) => s !== spec
                                 );
+                                // @ts-expect-error prevState typing
                                 setUserInfo((prevState) => {
                                   return {
                                     ...prevState,
@@ -817,7 +819,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                                   onSelect={() => {
                                     setInputValue('');
                                     setSelected((prev) => [...prev, specs]);
-
+                                    // @ts-expect-error prevState typing
                                     setUserInfo((prevState) => {
                                       return {
                                         ...prevState,

@@ -44,7 +44,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
   }, []);
 
   // Format phone number
-  function formatPhoneNumber(phoneNumber) {
+  function formatPhoneNumber(phoneNumber: any) {
     const cleaned = phoneNumber.replace(/\D/g, '');
     return cleaned.match(/.{1,3}/g).join(' ');
   }
