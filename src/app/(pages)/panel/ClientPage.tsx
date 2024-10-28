@@ -735,7 +735,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                   onKeyDown={handleKeyDown}
                   className="overflow-visible bg-transparent"
                 >
-                  <div className="group rounded-md text-sm ">
+                  <div className="group rounded-md text-sm flex items-center">
                     <div className="flex flex-wrap gap-1">
                       {selected.map((spec, index) => {
                         return (
@@ -786,27 +786,36 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                         );
                       })}
                       {/* Avoid having the "Search" Icon */}
+
                       <div
                         onBlur={() => setOpen(false)}
                         onFocus={() => setOpen(true)}
+                        className="flex items-center"
                       >
-                        {selected.length < 5 && (
-                          <CommandPrimitive.Input
-                            ref={inputRef}
-                            value={inputValue}
-                            onValueChange={setInputValue}
-                            onBlur={() => setOpen(false)}
-                            onFocus={() => setOpen(true)}
-                            placeholder="Kliknij aby wybrać"
-                            className="ml-2 flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
-                          />
-                        )}
+                        <CommandPrimitive.Input
+                          ref={inputRef}
+                          value={inputValue}
+                          onValueChange={setInputValue}
+                          onBlur={() => setOpen(false)}
+                          onFocus={() => setOpen(true)}
+                          placeholder={
+                            selected.length < 5
+                              ? 'Kliknij aby wybrać'
+                              : 'Odblokuj więcej specjalizacji'
+                          }
+                          className={cn(
+                            'ml-2 flex-1 min-w-[210px] bg-transparent outline-none placeholder:text-muted-foreground'
+                          )}
+                        />
                       </div>
                     </div>
                   </div>
                   <div className="relative mt-2">
                     <CommandList>
-                      {open && selectables.length > 0 ? (
+                      {open &&
+                      selectables.length > 0 &&
+                      !userInfo.is_pro &&
+                      selected.length < 5 ? (
                         <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
                           <CommandGroup className="h-full overflow-auto">
                             {selectables.map((specs) => {
