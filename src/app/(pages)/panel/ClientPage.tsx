@@ -289,9 +289,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     const { data } = await supabase.storage
       .from('gallery')
       .list(userInfo?.id + '/', {
-        limit: 4,
         offset: 0,
-        sortBy: { column: 'name', order: 'asc' }
+        sortBy: { column: 'name', order: 'desc' }
       });
 
     if (data !== null && data.length > 0) {
