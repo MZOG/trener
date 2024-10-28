@@ -799,9 +799,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                           onBlur={() => setOpen(false)}
                           onFocus={() => setOpen(true)}
                           placeholder={
-                            selected.length < 5
+                            userInfo.is_pro
                               ? 'Kliknij aby wybrać'
-                              : 'Odblokuj więcej specjalizacji'
+                              : selected.length >= 5 && !userInfo.is_pro
+                                ? 'Odblokuj więcej specjalizacji'
+                                : 'Kliknij aby wybrać'
                           }
                           className={cn(
                             'ml-2 flex-1 min-w-[210px] bg-transparent outline-none placeholder:text-muted-foreground'
@@ -812,10 +814,40 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                   </div>
                   <div className="relative mt-2">
                     <CommandList>
-                      {open &&
-                      selectables.length > 0 &&
-                      !userInfo.is_pro &&
-                      selected.length < 5 ? (
+                      {open && selectables.length > 0 && selected.length < 5 ? (
+                        <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+                          <CommandGroup className="h-full overflow-auto">
+                            {selectables.map((specs) => {
+                              return (
+                                <CommandItem
+                                  key={specs}
+                                  onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                  }}
+                                  onSelect={() => {
+                                    setInputValue('');
+                                    setSelected((prev) => [...prev, specs]);
+                                    // @ts-expect-error prevState typing
+                                    setUserInfo((prevState) => {
+                                      return {
+                                        ...prevState,
+                                        specializations: JSON.stringify([
+                                          ...selected,
+                                          specs
+                                        ])
+                                      };
+                                    });
+                                  }}
+                                  className={'cursor-pointer'}
+                                >
+                                  {specs}
+                                </CommandItem>
+                              );
+                            })}
+                          </CommandGroup>
+                        </div>
+                      ) : userInfo.is_pro && open ? (
                         <div className="absolute top-0 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
                           <CommandGroup className="h-full overflow-auto">
                             {selectables.map((specs) => {
