@@ -308,8 +308,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     }
   };
 
-  const SUPABASE_CDN =
-    'https://xjbdsomhlpvgiwtatfmp.supabase.co/storage/v1/object/public/gallery/';
+  const SUPABASE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/`;
 
   const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -433,15 +432,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   }
 
   if (loading) {
-    return (
-      <section className="max-w-3xl mx-auto px-5">
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[700px]" />
-          <Skeleton className="h-4 w-[600px]" />
-          <Skeleton className="h-4 w-[600px]" />
-        </div>
-      </section>
-    );
+    return <LoadingPanel />;
   }
 
   if (userInfo?.is_trainer === null) {
@@ -731,13 +722,13 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
             {/* Specjalizacje */}
             <PanelCard
+              is_pro={userInfo.is_pro}
+              unlock_text="Odblokuj więcej specjalizacji - Trener PRO"
               title={
                 userInfo.is_pro
                   ? 'Specjalizacje'
                   : `Specjalizacje (${selected.length}/5)`
               }
-              unlock
-              is_pro={userInfo.is_pro}
             >
               <div>
                 <Command
@@ -860,13 +851,13 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
             {/* Galeria */}
             <PanelCard
+              is_pro={userInfo.is_pro}
+              unlock_text="Odblokuj więcej zdjęć - Trener PRO"
               title={
                 userInfo.is_pro
                   ? 'Galeria zdjęć'
                   : `Galeria zdjęć (${gallery?.length}/4)`
               }
-              unlock
-              is_pro={userInfo.is_pro}
             >
               <div className="grid gap-3 grid-cols-4">
                 {gallery?.map((image) => (
@@ -958,29 +949,25 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 };
 
 const PanelCard = ({
-  unlock,
   title,
   children,
+  unlock_text,
   is_pro
 }: {
-  unlock?: boolean;
   title: string;
   children: React.ReactNode;
+  unlock_text?: string;
   is_pro?: boolean;
 }) => {
   return (
     <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
       <div className="flex justify-between border-b pb-2">
-        <p className="font-medium">
-          {title}{' '}
-          {unlock && !is_pro && (
-            <Button asChild variant="ghost" className="ml-5 text-gray-300">
-              <Link href="/trener-pro" className="text-sm font-normal">
-                Odblokuj funkcję - Trener PRO
-              </Link>
-            </Button>
-          )}
-        </p>
+        <p className="font-medium">{title}</p>
+        {!is_pro && (
+          <Button asChild variant="link">
+            <Link href="/trener-pro">{unlock_text}</Link>
+          </Button>
+        )}
       </div>
       <div>{children}</div>
     </div>
@@ -1073,6 +1060,18 @@ const ProFeatures = ({ is_pro }: { is_pro: boolean }) => {
       <p className="font-medium">Trener PRO jest aktywny</p>
       <p className="text-xs">Zarządzaj subskrypcją (link do easycart)</p>
     </div>
+  );
+};
+
+const LoadingPanel = () => {
+  return (
+    <section className="max-w-3xl mx-auto px-5">
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[700px]" />
+        <Skeleton className="h-4 w-[600px]" />
+        <Skeleton className="h-4 w-[600px]" />
+      </div>
+    </section>
   );
 };
 

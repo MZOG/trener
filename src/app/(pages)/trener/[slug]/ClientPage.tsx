@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Trainer } from '@/types/Trainer';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-
+import { formatPhoneNumber } from '@/lib/utils';
 // icons
 import { Facebook, Instagram, TriangleAlert } from 'lucide-react';
 
@@ -43,12 +43,6 @@ const TrainerPage = ({ slug }: { slug: string }) => {
     getTrainerData();
   }, []);
 
-  // Format phone number
-  function formatPhoneNumber(phoneNumber: any) {
-    const cleaned = phoneNumber.replace(/\D/g, '');
-    return cleaned.match(/.{1,3}/g).join(' ');
-  }
-
   if (loading) {
     return (
       <Container className="space-y-2" width="max-w-4xl">
@@ -66,14 +60,15 @@ const TrainerPage = ({ slug }: { slug: string }) => {
         <aside className="flex flex-col gap-5">
           <p>image</p>
           {trainer?.is_pro && <p>(pro) oceny</p>}
-          <h1>{trainer?.full_name || ''}</h1>
-
           <div>
-            <p className="text-sm text-gray-600">Miejscowość</p>
-            <p className="font-medium text-sm">
-              {trainer?.location ? trainer?.location : '-'}
+            <h1 className="font-semibold text-lg">
+              {trainer?.full_name || ''}
+            </h1>
+            <p className="text-sm">
+              Trener personalny {trainer?.location ?? trainer?.location}
             </p>
           </div>
+
           <div>
             <p className="text-sm text-gray-600">Numer telefonu</p>
             <a

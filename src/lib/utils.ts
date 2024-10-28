@@ -5,6 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function formatPhoneNumber(phoneNumber: string) {
+  const cleaned = phoneNumber.replace(/\D/g, '');
+  return cleaned?.match(/.{1,3}/g).join(' ');
+}
+
 export function slugify(str: string) {
   const fromChar = [
     /ą/gi,
