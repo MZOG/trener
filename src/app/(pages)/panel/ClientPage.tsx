@@ -924,23 +924,29 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 ))}
               </div>
 
-              {gallery.length < 4 && (
-                <div className="mt-5">
-                  <label
-                    htmlFor="uploadFile1"
-                    className="flex items-center gap-2 text-sm font-medium bg-trenerBlue hover:bg-trenerBlue/80 text-white px-4 py-1.5 outline-none rounded-lg w-max cursor-pointer mx-auto"
-                  >
-                    <CloudArrowUpIcon className="w-6 h-6" />
-                    Dodaj zdjęcie
-                    <input
-                      type="file"
-                      id="uploadFile1"
-                      className="hidden"
-                      onChange={(e) => handleUploadImage(e)}
-                    />
-                  </label>
-                </div>
-              )}
+              <div className="mt-5">
+                <label
+                  htmlFor="gallery-image"
+                  className={cn(
+                    'flex items-center gap-2 text-sm font-medium bg-trenerBlue hover:bg-trenerBlue/80 text-white px-4 py-1.5 outline-none rounded-lg w-max cursor-pointer mx-auto',
+                    !userInfo.is_pro &&
+                      gallery.length >= 4 &&
+                      'cursor-not-allowed'
+                  )}
+                >
+                  <CloudArrowUpIcon className="w-6 h-6" />
+                  {!userInfo.is_pro && gallery.length >= 4
+                    ? 'Odblokuj więcej zdjęć'
+                    : 'Dodaj zdjęcie'}
+                  <input
+                    type="file"
+                    id="gallery-image"
+                    className="hidden"
+                    disabled={!userInfo.is_pro && gallery.length >= 4}
+                    onChange={(e) => handleUploadImage(e)}
+                  />
+                </label>
+              </div>
             </PanelCard>
 
             {/* Social media */}
