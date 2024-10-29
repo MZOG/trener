@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/ssr';
-import TrainerPage from './ClientPage';
+import TrainerPage from '../../../../components/pages/trener/TrenerPage';
 
 type Props = {
   params: Promise<{ slug: string }>;

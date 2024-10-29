@@ -65,7 +65,7 @@ type GalleryImagesProps = {
   updated_at: string;
   created_at: string;
   last_accessed_at: string;
-  metadata: Record<string, any>;
+  // metadata: Record<string, any>;
 };
 
 type SpecsProps = string;
@@ -159,13 +159,14 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
     if (error) {
       console.log(error);
+      return;
     }
 
     if (data) {
       setUserInfo(data[0]);
       setLoading(false);
 
-      if (JSON.parse(data[0].specializations).length > 0) {
+      if (JSON.parse(data[0]?.specializations).length > 0) {
         setSelected(JSON.parse(data[0].specializations || ''));
         setProfileStrength((prevState) => {
           return {
@@ -258,7 +259,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       });
 
       checkStrength();
-      router.refresh();
     }
   };
 
@@ -393,6 +393,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     if (userInfo?.id) {
       getImages();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   useEffect(() => {
@@ -888,7 +889,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
             {/* Galeria */}
             <PanelCard
-              is_pro={userInfo.is_pro}
+              is_pro={userInfo?.is_pro}
               unlock_text="Odblokuj więcej zdjęć - Trener PRO"
               title={
                 userInfo.is_pro
@@ -1000,7 +1001,7 @@ const PanelCard = ({
   title: string;
   children: React.ReactNode;
   unlock_text?: string;
-  is_pro?: boolean;
+  is_pro?: boolean | null;
 }) => {
   return (
     <div className="bg-white p-7 rounded-xl flex flex-col w-full gap-4 border group">
@@ -1017,7 +1018,7 @@ const PanelCard = ({
   );
 };
 
-const ProFeatures = ({ is_pro }: { is_pro: boolean }) => {
+const ProFeatures = ({ is_pro }: { is_pro: boolean | null }) => {
   const FEATURES = [
     {
       id: 1,
