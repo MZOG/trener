@@ -1,15 +1,25 @@
 'use client';
 import { useState } from 'react';
 import { Button } from './ui/button';
-import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import { miasta } from '@/lib/miasta';
 import { slugify } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 
 type Item = {
   id: number;
   name: string;
 };
+
+const ReactSearchAutocomplete = dynamic(
+  () =>
+    import('react-search-autocomplete').then(
+      (module) => module.ReactSearchAutocomplete<Item>
+    ),
+  {
+    loading: () => <p>Loading...</p>
+  }
+);
 
 const CitySearch = () => {
   const router = useRouter();
@@ -28,33 +38,39 @@ const CitySearch = () => {
   };
 
   return (
-    <div className="relative z-20">
-      <ReactSearchAutocomplete<Item>
-        items={miasta}
-        maxResults={5}
-        onSelect={handleOnSelect}
-        autoFocus
-        fuseOptions={{ keys: ['name'], shouldSort: true }}
-        resultStringKeyName="name"
-        formatResult={formatResult}
-        showIcon={false}
-        className="searchInput"
-        styling={{
-          boxShadow: 'none',
-          height: '60px',
-          borderRadius: '30px',
-          fontSize: '16px'
-        }}
-      />
-      <Button
-        onClick={() => handleOnSearch()}
-        size="citySearch"
-        variant="citySearch"
-        className="absolute z-30 top-1/2 right-2 transform -translate-y-1/2 rounded-full"
-      >
-        Szukaj
-      </Button>
-    </div>
+    <>
+      {ReactSearchAutocomplete ? (
+        <div className="relative z-20">
+          <ReactSearchAutocomplete
+            items={miasta}
+            maxResults={5}
+            onSelect={handleOnSelect}
+            autoFocus
+            fuseOptions={{ keys: ['name'], shouldSort: true }}
+            resultStringKeyName="name"
+            formatResult={formatResult}
+            showIcon={false}
+            className="searchInput"
+            styling={{
+              boxShadow: 'none',
+              height: '60px',
+              borderRadius: '30px',
+              fontSize: '16px'
+            }}
+          />
+          <Button
+            onClick={() => handleOnSearch()}
+            size="citySearch"
+            variant="citySearch"
+            className="absolute z-30 top-1/2 right-2 transform -translate-y-1/2 rounded-full"
+          >
+            Szukaj
+          </Button>
+        </div>
+      ) : (
+        <p>elko</p>
+      )}
+    </>
   );
 };
 
