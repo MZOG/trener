@@ -15,7 +15,9 @@ const badgeVariants = cva(
         destructive:
           'border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80',
         outline: 'text-foreground',
-        specs: 'px-3 py-1 text-trenerDark'
+        specs: 'px-3 py-1 text-trenerDark',
+        trainerPro:
+          'bg-trenerBlue text-white rounded-lg text-sm px-3 py-1.5 font-medium border-none'
       }
     },
     defaultVariants: {

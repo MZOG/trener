@@ -9,10 +9,6 @@ import { formatPhoneNumber } from '@/lib/utils';
 // icons
 import { Facebook, Instagram, TriangleAlert } from 'lucide-react';
 
-// todo
-// - galeria
-// - trainer avatar
-
 const TrainerPage = ({ slug }: { slug: string }) => {
   // supabase
   const supabase = createClient();

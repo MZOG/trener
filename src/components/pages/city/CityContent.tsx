@@ -43,8 +43,6 @@ const CityContent = ({ slug }: { slug: string }) => {
     );
   }
 
-  console.log(trainers?.length);
-
   if (trainers?.length === 0) {
     return (
       <Container>

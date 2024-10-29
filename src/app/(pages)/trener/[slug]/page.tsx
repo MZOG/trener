@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/ssr';
 import TrainerPage from './ClientPage';
-import { Metadata } from 'next';
 
 type Props = {
   params: Promise<{ slug: string }>;
