@@ -145,7 +145,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
           </PanelCard>
           <PanelCard title="Specjalizacje">
             {trainer?.specializations ? (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {JSON.parse(trainer?.specializations).map((spec: string) => (
                   <Button variant="outline" key={spec}>
                     {spec}
