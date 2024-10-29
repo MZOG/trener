@@ -1,5 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server';
-import ClientPage from './ClientPage';
+import ClientPage from '../../../components/pages/panel/PanelPage';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

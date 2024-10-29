@@ -43,9 +43,17 @@ export default function Header() {
         )}
       >
         <div className="flex lg:flex-1">
-          <Link href="/" className="text-sm font-medium">
+          <Link
+            href="/"
+            className="text-sm font-medium group flex gap-2 items-center grow-0"
+          >
             <span className="sr-only">Trener</span>
-            Trener
+            <span className="bg-trenerBlue px-1 py-0.5 font-semibold rounded-sm text-white">
+              TP
+            </span>{' '}
+            <span className="group-hover:text-trenerBlue">
+              Trener Personalny
+            </span>
           </Link>
         </div>
         <div className="flex lg:hidden">

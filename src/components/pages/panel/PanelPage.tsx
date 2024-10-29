@@ -2,7 +2,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,7 +22,6 @@ import {
   TrashIcon,
   CloudArrowUpIcon
 } from '@heroicons/react/24/outline';
-import { Trainer } from '@/types/Trainer';
 import { Progress } from '@/components/ui/progress';
 import {
   AlertDialog,
@@ -31,7 +34,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
-import { X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import {
   Command,
@@ -40,20 +42,15 @@ import {
   CommandList
 } from '@/components/ui/command';
 import { Command as CommandPrimitive } from 'cmdk';
+import { X } from 'lucide-react';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
-import { FancyMultiSelect } from '@/components/ui/fancy-multi-select';
-import Link from 'next/link';
 import { cn, slugify } from '@/lib/utils';
+import { Trainer } from '@/types/Trainer';
 
 // TipTap
 import TextAlign from '@tiptap/extension-text-align';
 import { EditorContent, useEditor, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { revalidatePath } from 'next/cache';
-import { useRouter } from 'next/navigation';
-// import { CheckboxProps } from '@headlessui/react';
 
 type ClientPageProps = {
   userID: string;
