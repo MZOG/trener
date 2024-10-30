@@ -6,10 +6,15 @@ import { createClient } from '@/lib/supabase/client';
 import Container from '@/components/Container';
 import TrainerCard from '@/components/TrainerCard';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 const CityContent = ({ slug }: { slug: string }) => {
   const [loading, setLoading] = useState(true);
   const [trainers, setTrainers] = useState<Trainer[]>();
+  const [filteredTrainers, setFilteredTrainers] = useState<Trainer[]>();
+
+  const [isFemaleFilter, setIsFemaleFilter] = useState(false);
 
   const supabase = createClient();
 
@@ -32,6 +37,21 @@ const CityContent = ({ slug }: { slug: string }) => {
   useEffect(() => {
     getCity();
   }, []);
+
+  const resetFilters = () => {
+    setFilteredTrainers(null);
+    setIsFemaleFilter(false);
+  };
+
+  const handleIsFemale = (e) => {
+    setIsFemaleFilter(e);
+    const isFemaleTrainers = trainers?.filter((trainer) => {
+      if (trainer.is_female === e) {
+        return trainer;
+      }
+    });
+    setFilteredTrainers(isFemaleTrainers);
+  };
 
   if (loading) {
     return (
@@ -62,22 +82,34 @@ const CityContent = ({ slug }: { slug: string }) => {
         </h1>
 
         <div className="mt-20 flex gap-10">
-          <aside className="min-w-[200px]">
+          <aside className="min-w-[200px] space-y-4 bg-white self-start border rounded-xl p-5">
             <p className="text-sm font-semibold">Filtry</p>
 
-            <p>tylko kobiety</p>
-            <p>specjalizacje</p>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="airplane-mode"
+                checked={isFemaleFilter}
+                onCheckedChange={handleIsFemale}
+              />
+              <Label htmlFor="airplane-mode">Tylko kobiety</Label>
+            </div>
+
+            <p className="text-xs text-gray-400">Więcej filtrów wkrótce</p>
 
             <div className="flex gap-2">
-              <Button variant="ghost">Resetuj</Button>
-              <Button>Filtruj</Button>
+              <Button variant="outline" onClick={resetFilters}>
+                Reset
+              </Button>
             </div>
           </aside>
           <div className="grid grid-cols-3 gap-5">
-            {trainers &&
-              trainers.map((trener, index) => (
-                <TrainerCard trainer={trener} key={index} />
-              ))}
+            {filteredTrainers
+              ? filteredTrainers.map((trener, index) => (
+                  <TrainerCard trainer={trener} key={index} />
+                ))
+              : trainers?.map((trener, index) => (
+                  <TrainerCard trainer={trener} key={index} />
+                ))}
           </div>
         </div>
       </>

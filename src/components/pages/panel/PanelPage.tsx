@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { v4 as uuidv4 } from 'uuid';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Label } from '@/components/ui/label';
@@ -110,7 +109,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   });
 
   const { toast } = useToast();
-  const router = useRouter();
 
   // MultiSelect
   const handleUnselect = (specs: SpecsProps) => {
@@ -166,7 +164,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       setUserInfo(data[0]);
       setLoading(false);
 
-      if (JSON.parse(data[0]?.specializations).length > 0) {
+      if (JSON.parse(data[0]?.specializations || '').length > 0) {
         setSelected(JSON.parse(data[0].specializations || ''));
         setProfileStrength((prevState) => {
           return {

@@ -83,7 +83,7 @@ const TrainerCard = ({ trainer }: { trainer: Trainer }) => {
     <Link
       href={`/trener/${slug}`}
       className={cn(
-        'border rounded-2xl p-2 w-[270px] hover:shadow-xl transition-all',
+        'bg-white border rounded-2xl p-2 w-[270px] hover:shadow-xl transition-all',
         is_pro && 'bg-trenerBlue/5 border-trenerBlue/20 relative shadow-md'
       )}
     >

@@ -18,9 +18,9 @@ export type Database = {
           email: string | null
           facebook: string | null
           full_name: string | null
-          gallery: string[] | null
           id: number
           instagram: string | null
+          is_female: boolean | null
           is_pro: boolean | null
           is_trainer: boolean | null
           location: string | null
@@ -39,9 +39,9 @@ export type Database = {
           email?: string | null
           facebook?: string | null
           full_name?: string | null
-          gallery?: string[] | null
           id?: number
           instagram?: string | null
+          is_female?: boolean | null
           is_pro?: boolean | null
           is_trainer?: boolean | null
           location?: string | null
@@ -60,9 +60,9 @@ export type Database = {
           email?: string | null
           facebook?: string | null
           full_name?: string | null
-          gallery?: string[] | null
           id?: number
           instagram?: string | null
+          is_female?: boolean | null
           is_pro?: boolean | null
           is_trainer?: boolean | null
           location?: string | null
