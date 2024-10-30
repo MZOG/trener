@@ -34,7 +34,9 @@ const CitySearch = () => {
   };
 
   const handleOnSearch = () => {
-    router.push(`/miasto/${selectedCity}`);
+    if (selectedCity !== '') {
+      router.push(`/miasto/${selectedCity}`);
+    }
   };
 
   return (
