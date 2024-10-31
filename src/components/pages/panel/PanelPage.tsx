@@ -922,15 +922,17 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Zaproponuj specjalizacje
+                      </AlertDialogTitle>
                       <AlertDialogDescription>
-                        <p className="mb-2">
-                          Podaj specjalizacje, których brakuje (oddzielone
-                          przecinkiem)
-                        </p>
+                        Podaj specjalizacje, których brakuje (oddzielone
+                        przecinkiem)
                         <Input
                           type="text"
                           name="comment"
                           onChange={handleChangeSpec}
+                          className="mt-2"
                         />
                       </AlertDialogDescription>
                     </AlertDialogHeader>
