@@ -6,9 +6,9 @@ export type Trainer = {
   email: string | null;
   facebook: string | null;
   full_name: string | null;
-  gallery: string[] | null;
   id: number;
   instagram: string | null;
+  is_female: boolean | null;
   is_pro: boolean | null;
   is_trainer: boolean | null;
   location: string | null;
@@ -18,5 +18,4 @@ export type Trainer = {
   specializations: string | null;
   user_id: string | null;
   work_online: boolean | null;
-  is_female: boolean | null;
 };

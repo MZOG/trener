@@ -158,7 +158,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     const { data, error } = await supabase
       .from('users')
       .select('*')
-      .eq('user_id', userID);
+      .eq('user_id', userID)
+      .single();
 
     if (error) {
       console.log(error);
@@ -166,11 +167,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     }
 
     if (data) {
-      setUserInfo(data[0]);
+      setUserInfo(data);
       setLoading(false);
 
-      if (JSON.parse(data[0]?.specializations || '').length > 0) {
-        setSelected(JSON.parse(data[0].specializations || ''));
+      if (JSON.parse(data?.specializations || '').length > 0) {
+        setSelected(JSON.parse(data.specializations || ''));
         setProfileStrength((prevState) => {
           return {
             ...prevState,
@@ -179,16 +180,13 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
         });
       }
 
-      // This one if for non trainers users
-      if (data.length === 0) return;
-
       // Set the content for TipTap editor
-      if (data[0].about === '<p></p>' || data[0].about === null) {
+      if (data.about === '<p></p>' || data.about === null) {
         editor?.commands.setContent(
           'Napisz coś o sobie (zaznacz tekst i kliknij pogrubienie aby pogrubić tekst)'
         );
       } else {
-        editor?.commands.setContent(data[0].about);
+        editor?.commands.setContent(data.about);
 
         // Set profile strength if about section is filled
         setProfileStrength((prevState) => {
@@ -200,7 +198,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       }
 
       // Both instagram and facebook should be filled
-      if (data[0].instagram && data[0].facebook) {
+      if (data.instagram && data.facebook) {
         setProfileStrength((prevState) => {
           return {
             ...prevState,
@@ -1078,7 +1076,7 @@ const PanelCard = ({
   );
 };
 
-const ProFeatures = ({ is_pro }: { is_pro: boolean | null }) => {
+const ProFeatures = ({ is_pro }: { is_pro: boolean | null | undefined }) => {
   const FEATURES = [
     {
       id: 1,
