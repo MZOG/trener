@@ -106,7 +106,9 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     gallery: false,
     social: false
   });
-  const [newSpecs, setNewSpecs] = useState({});
+  const [newSpecs, setNewSpecs] = useState({
+    comment: ''
+  });
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
@@ -439,23 +441,30 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   };
 
   const handleNewSpec = async () => {
-    const { data, error } = await supabase
-      .from('spec_ideas')
-      .insert(newSpecs)
-      .select();
-
-    if (error) {
+    if (typeof newSpecs.comment === 'string' && newSpecs.comment.length === 0) {
       toast({
         title: 'Ups..',
-        description: 'Coś poszło nie tak'
+        description: 'Wartość nie może być pusta :('
       });
-    }
+    } else {
+      const { data, error } = await supabase
+        .from('spec_ideas')
+        .insert(newSpecs)
+        .select();
 
-    if (data) {
-      toast({
-        title: 'Fajnie',
-        description: 'Zmiany zostały zapisane'
-      });
+      if (error) {
+        toast({
+          title: 'Ups..',
+          description: 'Coś poszło nie tak'
+        });
+      }
+
+      if (data) {
+        toast({
+          title: 'Fajnie',
+          description: 'Zmiany zostały zapisane'
+        });
+      }
     }
   };
 
@@ -936,7 +945,13 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Anuluj</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleNewSpec}>
+                      <AlertDialogAction
+                        onClick={handleNewSpec}
+                        disabled={
+                          typeof newSpecs.comment === 'string' &&
+                          newSpecs.comment.length === 0
+                        }
+                      >
                         Zaproponuj
                       </AlertDialogAction>
                     </AlertDialogFooter>
