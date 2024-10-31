@@ -96,7 +96,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const [gallery, setGallery] = useState<GalleryImagesProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(20);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<SpecsProps[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -107,11 +106,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     gallery: false,
     social: false
   });
-  const [newSpecs, setNewSpecs] = useState({
-    name: userInfo?.full_name,
-    email: userInfo?.email,
-    comment: ''
-  });
+  const [newSpecs, setNewSpecs] = useState({});
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { toast } = useToast();
 
@@ -242,6 +238,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const handleUpdateProfile = async () => {
     const { data, error } = await supabase
       .from('users')
+      // @ts-expect-error not sure what is this..
       .update(userInfo)
       .eq('user_id', userID)
       .select();
@@ -256,6 +253,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     if (data) {
       toast({
         title: 'Fajnie',
+        variant: 'responseOK',
         description: 'Zmiany zostały zapisane'
       });
 
