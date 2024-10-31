@@ -107,6 +107,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     gallery: false,
     social: false
   });
+  const [newSpecs, setNewSpecs] = useState({
+    name: userInfo?.full_name,
+    email: userInfo?.email,
+    comment: ''
+  });
 
   const { toast } = useToast();
 
@@ -425,6 +430,38 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
         break;
     }
   }
+
+  const handleChangeSpec = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewSpecs((prevState) => {
+      return {
+        ...prevState,
+        name: userInfo?.full_name,
+        email: userInfo?.email,
+        comment: event.target.value
+      };
+    });
+  };
+
+  const handleNewSpec = async () => {
+    const { data, error } = await supabase
+      .from('spec_ideas')
+      .insert(newSpecs)
+      .select();
+
+    if (error) {
+      toast({
+        title: 'Ups..',
+        description: 'Coś poszło nie tak'
+      });
+    }
+
+    if (data) {
+      toast({
+        title: 'Fajnie',
+        description: 'Zmiany zostały zapisane'
+      });
+    }
+  };
 
   if (loading) {
     return <LoadingPanel />;
@@ -879,9 +916,34 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                     </CommandList>
                   </div>
                 </Command>
-                <p className="text-xs hover:text-trenerBlue inline-flex font-medium cursor-pointer">
-                  Brak Twojej specjalizacji? (modal)
-                </p>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="link" className="text-xs">
+                      Brak Twojej specjalizacji?
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogDescription>
+                        <p className="mb-2">
+                          Podaj specjalizacje, których brakuje (oddzielone
+                          przecinkiem)
+                        </p>
+                        <Input
+                          type="text"
+                          name="comment"
+                          onChange={handleChangeSpec}
+                        />
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Anuluj</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleNewSpec}>
+                        Zaproponuj
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </PanelCard>
 
