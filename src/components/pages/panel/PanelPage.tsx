@@ -237,6 +237,16 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     });
   };
 
+  const handleDietPlan = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // @ts-expect-error prevState typings
+    setUserInfo((prevState) => {
+      return {
+        ...prevState,
+        diet_plan: event
+      };
+    });
+  };
+
   const handleUpdateProfile = async () => {
     const { data, error } = await supabase
       .from('users')
@@ -585,6 +595,27 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                             Prowadzenie online
                           </Label>
                         </div>
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id="diet_plan"
+                            name="diet_plan"
+                            onCheckedChange={(e) =>
+                              // @ts-expect-error event typing
+                              handleDietPlan(e)
+                            }
+                            defaultChecked={
+                              userInfo?.diet_plan
+                                ? userInfo?.diet_plan
+                                : undefined
+                            }
+                          />
+                          <Label
+                            htmlFor="diet_plan"
+                            className="text-trenerDark"
+                          >
+                            Plan dietetyczny
+                          </Label>
+                        </div>
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -641,6 +672,13 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 <p className="text-sm text-slate-500">Prowadzenie online</p>
                 <p className="font-medium">
                   {userInfo.work_online ? `Tak` : 'Nie'}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm text-slate-500">Plan dietetyczny</p>
+                <p className="font-medium">
+                  {userInfo.diet_plan ? `Tak` : 'Nie'}
                 </p>
               </div>
 
