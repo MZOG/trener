@@ -160,7 +160,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       .single();
 
     if (error) {
-      console.log(error);
+      ShowToast('Ups', 'Coś poszło nie tak', 'error');
       return;
     }
 
@@ -247,6 +247,26 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     });
   };
 
+  const ShowToast = (
+    title?: string,
+    description?: string,
+    type?: 'ok' | 'error'
+  ) => {
+    if (type === 'error') {
+      toast({
+        title: title,
+        description: description,
+        variant: 'destructive'
+      });
+    } else {
+      toast({
+        title: title,
+        description: description,
+        variant: 'responseOK'
+      });
+    }
+  };
+
   const handleUpdateProfile = async () => {
     const { data, error } = await supabase
       .from('users')
@@ -255,19 +275,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       .eq('user_id', userID)
       .select();
 
-    if (error) {
-      toast({
-        title: 'Ups..',
-        description: 'Coś poszło nie tak'
-      });
-    }
+    if (error)
+      ShowToast('Błąd..', 'Spróbuj zapisać zmiany jeszcze raz', 'error');
 
     if (data) {
-      toast({
-        title: 'Fajnie',
-        variant: 'responseOK',
-        description: 'Zmiany zostały zapisane'
-      });
+      ShowToast('Fajnie :)', 'Zmiany zostały zapisane', 'ok');
 
       checkStrength();
     }
@@ -301,6 +313,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
         sortBy: { column: 'name', order: 'desc' }
       });
 
+    console.log(data);
+
     if (data !== null && data.length > 0) {
       setGallery(data);
 
@@ -322,7 +336,9 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       const file = e?.target?.files[0];
       const { data, error } = await supabase.storage
         .from('gallery')
-        .upload(`${userInfo?.id}/${uuidv4()}`, file);
+        .upload(`${userInfo?.id}/${uuidv4()}`, file, {
+          cacheControl: '3600'
+        });
 
       if (data) {
         getImages();
@@ -1009,27 +1025,28 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               }
             >
               <div className="grid gap-3 grid-cols-4">
-                {gallery?.map((image) => (
-                  <div
-                    key={`${SUPABASE_CDN}/${userInfo.id}/${image.name}`}
-                    className="space-y-2"
-                  >
-                    <Image
-                      src={`${SUPABASE_CDN}/${userInfo.id}/${image.name}`}
-                      alt={image.name}
-                      width={300}
-                      height={600}
-                      className="rounded-xl"
-                    />
-                    <Button
-                      variant="red"
-                      size="red"
-                      onClick={() => handleRemoveImage(image.name)}
+                {gallery.length > 0 &&
+                  gallery?.map((image) => (
+                    <div
+                      key={`${SUPABASE_CDN}/${userInfo.id}/${image.name}`}
+                      className="space-y-2"
                     >
-                      <TrashIcon className="w-5 h-5 text-white" />
-                    </Button>
-                  </div>
-                ))}
+                      <Image
+                        src={`${SUPABASE_CDN}/${userInfo.id}/${image.name}`}
+                        alt={image.name}
+                        width={162}
+                        height={240}
+                        className="rounded-xl"
+                      />
+                      <Button
+                        variant="red"
+                        size="red"
+                        onClick={() => handleRemoveImage(image.name)}
+                      >
+                        <TrashIcon className="w-5 h-5 text-white" />
+                      </Button>
+                    </div>
+                  ))}
               </div>
 
               <div className="mt-5">
@@ -1055,6 +1072,9 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                   />
                 </label>
               </div>
+              <p className="text-sm md:text-center mt-2">
+                Polecamy dodawać zdjęcia 9:16 (1080px:1920px)
+              </p>
             </PanelCard>
 
             {/* Social media */}

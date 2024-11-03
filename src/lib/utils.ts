@@ -7,6 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatPhoneNumber(phoneNumber: string) {
   const cleaned = phoneNumber.replace(/\D/g, '');
+  // @ts-expect-error it's not null.
   return cleaned?.match(/.{1,3}/g).join(' ');
 }
 
@@ -32,5 +33,4 @@ export function slugify(str: string) {
     .replace(/\-\-+/g, '-') // Replace multiple - with single -
     .replace(/^-+/, '') // Trim - from start of text
     .replace(/-+$/, '');
-  return str;
 }
