@@ -296,7 +296,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const getImages = async () => {
     const { data } = await supabase.storage
       .from('gallery')
-      .list(userInfo?.id + '/', {
+      .list(`${userInfo?.id}/`, {
         offset: 0,
         sortBy: { column: 'name', order: 'desc' }
       });
@@ -322,7 +322,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       const file = e?.target?.files[0];
       const { data, error } = await supabase.storage
         .from('gallery')
-        .upload(userInfo?.id + '/' + uuidv4(), file);
+        .upload(`${userInfo?.id}/${uuidv4()}`, file);
 
       if (data) {
         getImages();
@@ -336,7 +336,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const handleRemoveImage = async (imageName: string) => {
     const { error } = await supabase.storage
       .from('gallery')
-      .remove([userInfo?.id + '/' + imageName]);
+      .remove([`${userInfo?.id}/${imageName}`]);
 
     if (error) {
       console.log(error);
@@ -1011,11 +1011,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
               <div className="grid gap-3 grid-cols-4">
                 {gallery?.map((image) => (
                   <div
-                    key={SUPABASE_CDN + userInfo.id + '/' + image.name}
+                    key={`${SUPABASE_CDN}/${userInfo.id}/${image.name}`}
                     className="space-y-2"
                   >
                     <Image
-                      src={SUPABASE_CDN + userInfo.id + '/' + image.name}
+                      src={`${SUPABASE_CDN}/${userInfo.id}/${image.name}`}
                       alt={image.name}
                       width={300}
                       height={600}
