@@ -54,6 +54,7 @@ export type Database = {
           specializations: string | null
           user_id: string | null
           work_online: boolean | null
+          www: string | null
         }
         Insert: {
           about?: string | null
@@ -75,6 +76,7 @@ export type Database = {
           specializations?: string | null
           user_id?: string | null
           work_online?: boolean | null
+          www?: string | null
         }
         Update: {
           about?: string | null
@@ -96,6 +98,7 @@ export type Database = {
           specializations?: string | null
           user_id?: string | null
           work_online?: boolean | null
+          www?: string | null
         }
         Relationships: []
       }

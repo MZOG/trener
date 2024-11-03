@@ -1079,7 +1079,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
             {/* Social media */}
             <PanelCard title="Social media">
-              <div className="flex gap-4 items-center">
+              <div className="flex flex-col gap-4">
                 <div className="grid w-full max-w-sm items-center gap-1.5">
                   <Label htmlFor="instagram">Instagram</Label>
                   <Input
@@ -1101,6 +1101,17 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                     id="facebook"
                     placeholder="https://www.facebook.com/marcinzogrodnik1993/"
                     value={userInfo.facebook || ''}
+                  />
+                  <p className="text-sm">Pełny link</p>
+                </div>
+                <div className="grid w-full max-w-sm items-center gap-1.5">
+                  <Label htmlFor="www">Strona WWW</Label>
+                  <Input
+                    onChange={handleChange}
+                    type="text"
+                    name="www"
+                    id="www"
+                    value={userInfo.www || ''}
                   />
                   <p className="text-sm">Pełny link</p>
                 </div>

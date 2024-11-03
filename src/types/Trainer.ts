@@ -18,4 +18,5 @@ export type Trainer = {
   specializations: string | null;
   user_id: string | null;
   work_online: boolean | null;
+  www: string | null;
 };
