@@ -110,6 +110,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     comment: ''
   });
   const inputRef = useRef<HTMLInputElement>(null);
+  const SUPABASE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/`;
 
   const { toast } = useToast();
 
@@ -280,7 +281,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
 
     if (data) {
       ShowToast('Fajnie :)', 'Zmiany zostały zapisane', 'ok');
-
       checkStrength();
     }
   };
@@ -328,8 +328,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       checkStrength();
     }
   };
-
-  const SUPABASE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/`;
 
   const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -494,6 +492,23 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     }
   };
 
+  const handleTrenerProTrial = async () => {
+    const { data, error } = await supabase
+      .from('users')
+      .update({ is_pro: true })
+      .eq('user_id', userID)
+      .select();
+
+    if (error)
+      ShowToast('Błąd..', 'Spróbuj zapisać zmiany jeszcze raz', 'error');
+
+    if (data) {
+      ShowToast('Fajnie :)', 'Zmiany zostały zapisane', 'ok');
+      getData();
+      checkStrength();
+    }
+  };
+
   if (loading) {
     return <LoadingPanel />;
   }
@@ -643,6 +658,15 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
+
+              {!userInfo.is_pro && (
+                <Button
+                  onClick={handleTrenerProTrial}
+                  className="bg-trenerBlue rounded-xl p-3 text-white font-medium"
+                >
+                  Aktywuj Trener PRO na 7 dni
+                </Button>
+              )}
 
               {userInfo.full_name && (
                 <div className="flex items-center gap-5">
