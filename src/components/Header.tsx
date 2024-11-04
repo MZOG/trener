@@ -25,6 +25,10 @@ export default function Header() {
     {
       name: 'Dla trenującego',
       href: '/dla-trenujacego'
+    },
+    {
+      name: 'Pomoc',
+      href: '/pomoc'
     }
   ];
 
