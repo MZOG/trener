@@ -7,7 +7,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { formatPhoneNumber } from '@/lib/utils';
 // icons
-import { Facebook, Instagram, TriangleAlert } from 'lucide-react';
+import {
+  Facebook,
+  Instagram,
+  MailIcon,
+  PhoneIcon,
+  TriangleAlert
+} from 'lucide-react';
 
 const TrainerPage = ({ slug }: { slug: string }) => {
   // supabase
@@ -50,141 +56,67 @@ const TrainerPage = ({ slug }: { slug: string }) => {
   } else {
     return (
       <Container
-        className="bg-[#F5F9FF] px-6 py-10 rounded-xl border border-[#E9EFFF] flex gap-10"
+        className="bg-white p-5 rounded-xl border border-[#E9EFFF] flex gap-10"
         width="max-w-5xl"
       >
-        <aside className="flex flex-col gap-5">
-          <p>image</p>
-          {trainer?.is_pro && <p>(pro) oceny</p>}
-          <div>
-            <h1 className="font-semibold text-lg">
-              {trainer?.full_name || ''}
-            </h1>
-            <p className="text-sm">
-              Trener personalny {trainer?.location ?? trainer?.location}
-            </p>
+        <header className="flex flex-col md:flex-row md:gap-10 min-w-[300px] md:w-auto">
+          <div id="trainer_picture" className="relative">
+            <Skeleton className="w-[150px] h-[150px] rounded-full" />
+            <Button className="absolute -bottom-5">Polecany trener</Button>
           </div>
 
           <div>
-            <p className="text-sm text-gray-600">Numer telefonu</p>
-            <a
-              href={`tel:+48${trainer?.phone}`}
-              className="font-medium hover:text-trenerBlue text-sm"
-            >
-              {trainer?.phone
-                ? `+48 ${formatPhoneNumber(trainer?.phone)}`
-                : '-'}
-            </a>
-          </div>
-          <div>
-            <p className="text-sm text-gray-600">E-mail</p>
-            <a
-              href={`mailto:${trainer?.email}`}
-              className="font-medium hover:text-trenerBlue text-sm"
-            >
-              {trainer?.email ? trainer?.email : '-'}
-            </a>
+            <h1 className="mt-7 font-medium text-lg">{trainer?.full_name}</h1>
+            <p className="text-sm">Trener personalny {trainer?.location}</p>
+            <p className="text-sm">stars (3 oceny)</p>
           </div>
 
-          {trainer?.instagram && (
-            <div className="flex items-center gap-2">
-              <Instagram className="w-5 h-5" />
-              <a
-                href={`https://instagram.com/${trainer?.instagram}`}
-                className="font-medium hover:text-trenerBlue text-sm"
-              >
-                {trainer?.instagram}
-              </a>
+          <div className="mt-4 space-y-1">
+            <div className="flex gap-1 text-sm items-center">
+              <PhoneIcon width={20} />
+              {trainer?.phone}
             </div>
-          )}
-
-          {trainer?.facebook && (
-            <div className="flex items-center gap-2">
-              <Facebook className="w-5 h-5" />
-              <a
-                href={`${trainer?.facebook}`}
-                className="font-medium hover:text-trenerBlue text-sm"
-              >
-                Profil facebook
-              </a>
+            <div className="flex gap-1 text-sm items-center">
+              <MailIcon width={20} />
+              {trainer?.email}
             </div>
-          )}
-
-          {trainer?.is_pro && <p>(pro) ocen trenera</p>}
-
-          <div className="flex items-center gap-2 mt-auto text-orange-700/60 hover:text-orange-700">
-            <TriangleAlert className="w-4 h-4" />
-            <p className="flex-end mt-auto text-sm font-medium">
-              Zgłoś trenera
-            </p>
           </div>
-        </aside>
 
-        <section className="space-y-5 flex-grow">
-          <PanelCard title="O mnie">
-            {trainer?.about ? (
-              <div dangerouslySetInnerHTML={{ __html: trainer?.about || '' }} />
-            ) : (
-              <p>Brak opisu :(</p>
-            )}
-            <div className="border-t mt-5 pt-5 flex items-center gap-5">
-              <div>
-                <p className="text-sm text-gray-500">Cena za godzinę</p>
-                <p className="font-medium">
-                  {trainer?.price ? `${trainer?.price} zł / h` : '-'}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-sm text-gray-500">Prowadzenie online</p>
-                <p className="font-medium">
-                  {trainer?.work_online ? `Tak` : 'Nie'}
-                </p>
-              </div>
+          <div className="mt-4 space-y-1">
+            <div className="flex gap-1 text-sm items-center">
+              <Instagram width={20} />
+              instagram
             </div>
-          </PanelCard>
-          <PanelCard title="Specjalizacje">
-            {trainer?.specializations ? (
-              <div className="flex flex-wrap gap-2">
-                {JSON.parse(trainer?.specializations).map((spec: string) => (
-                  <Button variant="outline" key={spec}>
-                    {spec}
-                  </Button>
-                ))}
-              </div>
-            ) : (
-              'Brak specjalizacji :('
-            )}
-          </PanelCard>
-          <PanelCard title="Galeria zdjęć">
-            <p>galeria content</p>
-          </PanelCard>
-          {trainer?.is_pro && (
-            <PanelCard title="Opinie">
-              <p>Brak opinii - Dodaj swoją</p>
-            </PanelCard>
-          )}
-        </section>
+            <div className="flex gap-1 text-sm items-center">
+              <Facebook width={20} />
+              facebook
+            </div>
+          </div>
+
+          <div className="mt-4 space-y-1">
+            <div className="flex flex-col gap-1 text-sm">
+              <p className="text-gray-600">Cena za godzinę</p>
+              <p className="text-base font-medium">{trainer?.price} zł</p>
+            </div>
+
+            <div className="flex flex-col gap-1 text-sm">
+              <p className="text-gray-600">Prowadzenie online</p>
+              <p className="text-base font-medium">
+                {trainer?.work_online ? 'Tak' : 'Nie'}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1 text-sm">
+              <p className="text-gray-600">Plan dietetyczny</p>
+              <p className="text-base font-medium">
+                {trainer?.diet_plan ? 'Tak' : 'Nie'}
+              </p>
+            </div>
+          </div>
+        </header>
       </Container>
     );
   }
-};
-
-const PanelCard = ({
-  children,
-  title
-}: {
-  children: React.ReactNode;
-  title: string;
-}) => {
-  return (
-    <div className="bg-white rounded-xl p-5 w-full border border-[#E9EFFF]">
-      <div className="border-b pb-3 w-full mb-5">
-        <p className="font-medium">{title}</p>
-      </div>
-      {children}
-    </div>
-  );
 };
 
 export default TrainerPage;

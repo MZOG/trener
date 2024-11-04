@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-trenerBlue text-primary-foreground shadow hover:bg-trenerBlue/90',
+          'bg-trenerBlue rounded-full text-primary-foreground shadow hover:bg-trenerBlue/90',
         defaultTrener:
           'bg-trenerBlue text-base text-primary-foreground shadow hover:bg-trenerBlue/90',
         destructive:
@@ -27,7 +27,7 @@ const buttonVariants = cva(
           'text-base bg-trenerBlue leading-none text-white font-semibold rounded-lg  hover:bg-trenerBlue/90'
       },
       size: {
-        default: 'px-2 py-1',
+        default: 'px-3 py-2',
         sm: 'rounded-md px-3 text-xs',
         lg: 'h-10 rounded-md px-8',
         icon: 'h-9 w-9',
