@@ -27,7 +27,7 @@ const buttonVariants = cva(
           'text-base bg-trenerBlue leading-none text-white font-semibold rounded-lg  hover:bg-trenerBlue/90'
       },
       size: {
-        default: 'px-3 py-2',
+        default: 'px-3 py-1.5',
         sm: 'rounded-md px-3 text-xs',
         lg: 'h-10 rounded-md px-8',
         icon: 'h-9 w-9',

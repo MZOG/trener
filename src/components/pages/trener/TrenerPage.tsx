@@ -15,6 +15,8 @@ import {
   PhoneIcon,
   TriangleAlert
 } from 'lucide-react';
+import Star from '../../../../public/svg/star.svg';
+import Image from 'next/image';
 
 const TrainerPage = ({ slug }: { slug: string }) => {
   // supabase
@@ -56,26 +58,55 @@ const TrainerPage = ({ slug }: { slug: string }) => {
     );
   } else {
     return (
-      <Container
-        className="bg-white p-5 md:py-20 rounded-xl border border-[#E9EFFF] flex gap-10"
-        width="max-w-5xl"
-      >
-        <header className="flex flex-col md:flex-row md:gap-10 lg:gap-14 min-w-[300px] md:w-auto md:items-center md:mx-auto">
-          <div id="trainer_picture" className="relative">
-            <Skeleton className="w-[150px] h-[150px] rounded-full" />
-            <Button className="absolute -bottom-5">Polecany trener</Button>
+      <Container className="rounded-xl flex gap-10 flex-col" width="max-w-5xl">
+        <div id="trainer_picture" className="flex items-center gap-5">
+          <Skeleton className="w-[130px] h-[130px] animate-none rounded-full ring-2 ring-offset-2 ring-trenerBlue" />
+          <div className="space-y-1">
+            {trainer?.is_pro && <Button>Polecany trener</Button>}
+            <h1 className="font-semibold text-lg">{trainer?.full_name}</h1>
+            <p className="text-sm">Trener personalny {trainer?.location}</p>
+            {trainer?.is_pro && (
+              <div className="flex gap-2 items-center">
+                <div className="flex gap-1">
+                  <Image src={Star} alt="Ocena" />
+                  <Image src={Star} alt="Ocena" />
+                  <Image src={Star} alt="Ocena" />
+                  <Image src={Star} alt="Ocena" />
+                  <Image src={Star} alt="Ocena" />
+                </div>
+                <p className="text-sm">(3 oceny)</p>
+              </div>
+            )}
           </div>
+        </div>
 
+        <div id="trainer_about">
+          <h2 className="text-lg font-semibold mb-3">O mnie</h2>
+          {trainer?.about ? (
+            <div dangerouslySetInnerHTML={{ __html: trainer?.about || '' }} />
+          ) : (
+            <p>Brak opisu :(</p>
+          )}
+        </div>
+
+        <div id="trainer_specializations">
+          <h2 className="text-lg font-semibold mb-3">Specjalizacje</h2>
+          {trainer?.specializations ? (
+            <div className="flex flex-wrap gap-2">
+              {JSON.parse(trainer?.specializations).map((spec: string) => (
+                <Button variant="outline" key={spec}>
+                  {spec}
+                </Button>
+              ))}
+            </div>
+          ) : (
+            'Brak specjalizacji :('
+          )}
+        </div>
+
+        <header className="flex flex-col md:flex-row md:gap-10 lg:gap-14 min-w-[300px] md:items-center ">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col md:flex-row md:gap-10 lg:gap-14 md:justify-center">
-              <div>
-                <h1 className="mt-7 md:mt-0 font-medium text-lg">
-                  {trainer?.full_name}
-                </h1>
-                <p className="text-sm">Trener personalny {trainer?.location}</p>
-                <p className="text-sm">stars (3 oceny)</p>
-              </div>
-
               <div className="flex flex-col md:gap-1">
                 <div className="flex gap-1 text-sm items-center">
                   <PhoneIcon width={20} />
@@ -135,6 +166,10 @@ const TrainerPage = ({ slug }: { slug: string }) => {
             </div>
           </div>
         </header>
+
+        <div className="">
+          <h2 className="font-medium">O mnie</h2>
+        </div>
       </Container>
     );
   }
