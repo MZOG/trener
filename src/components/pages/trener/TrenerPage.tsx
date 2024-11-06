@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Trainer } from '@/types/Trainer';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { formatPhoneNumber } from '@/lib/utils';
+import { cn, formatPhoneNumber } from '@/lib/utils';
 // icons
 import {
   EarthIcon,
@@ -58,9 +58,14 @@ const TrainerPage = ({ slug }: { slug: string }) => {
     );
   } else {
     return (
-      <Container className="rounded-xl flex gap-10 flex-col" width="max-w-5xl">
+      <Container className="rounded-xl flex gap-6 flex-col md:max-w-4xl lg:max-w-3xl">
         <div id="trainer_picture" className="flex items-center gap-5">
-          <Skeleton className="w-[130px] h-[130px] animate-none rounded-full ring-2 ring-offset-2 ring-trenerBlue" />
+          <Skeleton
+            className={cn(
+              'w-[130px] h-[130px] animate-none rounded-full',
+              trainer?.is_pro && 'ring-2 ring-offset-2 ring-trenerBlue'
+            )}
+          />
           <div className="space-y-1">
             {trainer?.is_pro && <Button>Polecany trener</Button>}
             <h1 className="font-semibold text-lg">{trainer?.full_name}</h1>
@@ -80,7 +85,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
           </div>
         </div>
 
-        <div id="trainer_about">
+        <div id="trainer_about" className="bg-white p-5 rounded-xl border">
           <h2 className="text-lg font-semibold mb-3">O mnie</h2>
           {trainer?.about ? (
             <div dangerouslySetInnerHTML={{ __html: trainer?.about || '' }} />
@@ -89,7 +94,38 @@ const TrainerPage = ({ slug }: { slug: string }) => {
           )}
         </div>
 
-        <div id="trainer_specializations">
+        <div
+          id="trainer_training_info"
+          className="bg-white p-5 rounded-xl border"
+        >
+          <h2 className="text-lg font-semibold mb-3">Informacje treningowe</h2>
+
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="flex flex-col gap-1 text-sm">
+              <p className="text-gray-600">Cena za godzinę</p>
+              <p className="text-base font-medium">{trainer?.price} zł</p>
+            </div>
+
+            <div className="flex flex-col gap-1 text-sm">
+              <p className="text-gray-600">Prowadzenie online</p>
+              <p className="text-base font-medium">
+                {trainer?.work_online ? 'Tak' : 'Nie'}
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-1 text-sm">
+              <p className="text-gray-600">Plan dietetyczny</p>
+              <p className="text-base font-medium">
+                {trainer?.diet_plan ? 'Tak' : 'Nie'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="trainer_specializations"
+          className="bg-white p-5 rounded-xl border"
+        >
           <h2 className="text-lg font-semibold mb-3">Specjalizacje</h2>
           {trainer?.specializations ? (
             <div className="flex flex-wrap gap-2">
@@ -104,71 +140,40 @@ const TrainerPage = ({ slug }: { slug: string }) => {
           )}
         </div>
 
-        <header className="flex flex-col md:flex-row md:gap-10 lg:gap-14 min-w-[300px] md:items-center ">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col md:flex-row md:gap-10 lg:gap-14 md:justify-center">
-              <div className="flex flex-col md:gap-1">
-                <div className="flex gap-1 text-sm items-center">
-                  <PhoneIcon width={20} />
-                  <a href={`tel:${trainer?.phone}`} className="font-medium">
-                    {trainer?.phone}
-                  </a>
-                </div>
-                <div className="flex gap-1 text-sm items-center">
-                  <MailIcon width={20} />
-                  <a href={`mailto:${trainer?.email}`} className="font-medium">
-                    {trainer?.email}
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex flex-col md:gap-1">
-                <div className="flex gap-1 text-sm items-center">
-                  <Instagram width={20} />
-                  <a href={`${trainer?.instagram}`} className="font-medium">
-                    {trainer?.instagram}
-                  </a>
-                </div>
-                <div className="flex gap-1 text-sm items-center">
-                  <Facebook width={20} />
-                  <a href={`${trainer?.facebook}`} className="font-medium">
-                    facebook
-                  </a>
-                </div>
-                <div className="flex gap-1 text-sm items-center">
-                  <EarthIcon width={20} />
-                  <a href={`${trainer?.www}`} className="font-medium">
-                    www
-                  </a>
-                </div>
-              </div>
+        <div id="trainer_contact" className="bg-white p-5 rounded-xl border">
+          <h2 className="text-lg font-semibold mb-3">Kontakt</h2>
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="flex gap-2 items-center">
+              <PhoneIcon width={20} />
+              <a href={`tel:${trainer?.phone}`} className="font-medium">
+                {trainer?.phone}
+              </a>
             </div>
-
-            <div className="flex flex-col md:flex-row gap-10">
-              <div className="flex flex-col gap-1 text-sm">
-                <p className="text-gray-600">Cena za godzinę</p>
-                <p className="text-base font-medium">{trainer?.price} zł</p>
-              </div>
-
-              <div className="flex flex-col gap-1 text-sm">
-                <p className="text-gray-600">Prowadzenie online</p>
-                <p className="text-base font-medium">
-                  {trainer?.work_online ? 'Tak' : 'Nie'}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-1 text-sm">
-                <p className="text-gray-600">Plan dietetyczny</p>
-                <p className="text-base font-medium">
-                  {trainer?.diet_plan ? 'Tak' : 'Nie'}
-                </p>
-              </div>
+            <div className="flex gap-2 items-center">
+              <MailIcon width={20} />
+              <a href={`mailto:${trainer?.email}`} className="font-medium">
+                {trainer?.email}
+              </a>
+            </div>
+            <div className="flex gap-2 items-center">
+              <Instagram width={20} />
+              <a href={`${trainer?.instagram}`} className="font-medium">
+                {trainer?.instagram}
+              </a>
+            </div>
+            <div className="flex gap-2 items-center">
+              <Facebook width={20} />
+              <a href={`${trainer?.facebook}`} className="font-medium">
+                facebook
+              </a>
+            </div>
+            <div className="flex gap-2 items-center">
+              <EarthIcon width={20} />
+              <a href={`${trainer?.www}`} className="font-medium">
+                www
+              </a>
             </div>
           </div>
-        </header>
-
-        <div className="">
-          <h2 className="font-medium">O mnie</h2>
         </div>
       </Container>
     );
