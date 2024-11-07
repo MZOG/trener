@@ -146,7 +146,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
 
       <div id="trainer_contact" className="bg-white p-5 rounded-xl border">
         <h2 className="text-lg font-semibold mb-3">Kontakt</h2>
-        <div className="flex flex-col md:flex-row gap-3">
+        <div className="flex flex-col gap-3">
           {trainer?.phone && (
             <div className="flex gap-2 items-center">
               <PhoneIcon width={20} />
