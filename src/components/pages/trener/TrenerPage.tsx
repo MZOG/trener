@@ -60,8 +60,8 @@ const TrainerPage = ({ slug }: { slug: string }) => {
   }
 
   return (
-    <Container className="rounded-xl flex gap-6 flex-col md:max-w-4xl lg:max-w-3xl">
-      <div id="trainer_picture" className="flex items-center gap-5">
+    <Container className="rounded-xl flex gap-6 flex-col md:max-w-4xl lg:max-w-3xl mb-10">
+      <div id="trainer_picture" className="flex items-center gap-5 flex-wrap">
         <Skeleton
           className={cn(
             'w-[130px] h-[130px] animate-none rounded-full',
@@ -85,9 +85,66 @@ const TrainerPage = ({ slug }: { slug: string }) => {
             </div>
           )}
         </div>
+        <div className="flex flex-col md:text-sm w-full md:w-auto md:ml-auto space-y-1 bg-white p-5 rounded-xl border">
+          {trainer?.phone && (
+            <div className="flex gap-2 items-center">
+              <PhoneIcon width={20} />
+              <a
+                href={`tel:${trainer?.phone}`}
+                className="font-medium hover:underline underline-offset-2 hover:text-trenerBlue"
+              >
+                {formatPhoneNumber(trainer?.phone || '')}
+              </a>
+            </div>
+          )}
+          {trainer?.email && (
+            <div className="flex gap-2 items-center">
+              <MailIcon width={20} />
+              <a
+                href={`mailto:${trainer?.email}`}
+                className="font-medium hover:underline underline-offset-2 hover:text-trenerBlue"
+              >
+                {trainer?.email}
+              </a>
+            </div>
+          )}
+          {trainer?.instagram && (
+            <div className="flex gap-2 items-center">
+              <Instagram width={20} />
+              <a
+                href={`${trainer?.instagram}`}
+                className="font-medium hover:underline underline-offset-2 hover:text-trenerBlue"
+              >
+                Instagram
+              </a>
+            </div>
+          )}
+          {trainer?.facebook && (
+            <div className="flex gap-2 items-center">
+              <Facebook width={20} />
+              <a
+                href={`${trainer?.facebook}`}
+                className="font-medium hover:underline underline-offset-2 hover:text-trenerBlue"
+              >
+                Facebook
+              </a>
+            </div>
+          )}
+          {trainer?.www && (
+            <div className="flex gap-2 items-center">
+              <EarthIcon width={20} />
+              <a
+                href={`${trainer?.www}`}
+                className="font-medium hover:underline underline-offset-2 hover:text-trenerBlue"
+              >
+                Strona WWW
+              </a>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div id="trainer_about" className="bg-white p-5 rounded-xl border">
+      <div id="trainer_about" className="bg-white p-5 md:p-8 rounded-xl border">
         <h2 className="text-lg font-semibold mb-3">O mnie</h2>
         {trainer?.about ? (
           <div dangerouslySetInnerHTML={{ __html: trainer?.about || '' }} />
@@ -98,7 +155,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
 
       <div
         id="trainer_training_info"
-        className="bg-white p-5 rounded-xl border"
+        className="bg-white p-5 md:p-8 rounded-xl border"
       >
         <h2 className="text-lg font-semibold mb-3">Informacje treningowe</h2>
 
@@ -128,13 +185,13 @@ const TrainerPage = ({ slug }: { slug: string }) => {
 
       <div
         id="trainer_specializations"
-        className="bg-white p-5 rounded-xl border"
+        className="bg-white p-5 md:p-8 rounded-xl border"
       >
         <h2 className="text-lg font-semibold mb-3">Specjalizacje</h2>
         {trainer?.specializations ? (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 cursor-">
             {JSON.parse(trainer?.specializations).map((spec: string) => (
-              <Button variant="outline" key={spec}>
+              <Button variant="spec_btn" key={spec}>
                 {spec}
               </Button>
             ))}
@@ -142,52 +199,6 @@ const TrainerPage = ({ slug }: { slug: string }) => {
         ) : (
           'Brak specjalizacji :('
         )}
-      </div>
-
-      <div id="trainer_contact" className="bg-white p-5 rounded-xl border">
-        <h2 className="text-lg font-semibold mb-3">Kontakt</h2>
-        <div className="flex flex-col gap-3">
-          {trainer?.phone && (
-            <div className="flex gap-2 items-center">
-              <PhoneIcon width={20} />
-              <a href={`tel:${trainer?.phone}`} className="font-medium">
-                {formatPhoneNumber(trainer?.phone || '')}
-              </a>
-            </div>
-          )}
-          {trainer?.email && (
-            <div className="flex gap-2 items-center">
-              <MailIcon width={20} />
-              <a href={`mailto:${trainer?.email}`} className="font-medium">
-                {trainer?.email}
-              </a>
-            </div>
-          )}
-          {trainer?.instagram && (
-            <div className="flex gap-2 items-center">
-              <Instagram width={20} />
-              <a href={`${trainer?.instagram}`} className="font-medium">
-                {trainer?.instagram}
-              </a>
-            </div>
-          )}
-          {trainer?.facebook && (
-            <div className="flex gap-2 items-center">
-              <Facebook width={20} />
-              <a href={`${trainer?.facebook}`} className="font-medium">
-                facebook
-              </a>
-            </div>
-          )}
-          {trainer?.www && (
-            <div className="flex gap-2 items-center">
-              <EarthIcon width={20} />
-              <a href={`${trainer?.www}`} className="font-medium">
-                www
-              </a>
-            </div>
-          )}
-        </div>
       </div>
     </Container>
   );

@@ -13,6 +13,7 @@ const buttonVariants = cva(
           'bg-trenerBlue rounded-full text-primary-foreground shadow hover:bg-trenerBlue/90',
         defaultTrener:
           'bg-trenerBlue text-base text-primary-foreground shadow hover:bg-trenerBlue/90',
+        spec_btn: 'border border-trenerBlue/50 rounded-full text-trenerBlue',
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline:
@@ -24,7 +25,7 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         red: 'bg-red-700 hover:bg-red-700/80',
         citySearch:
-          'text-base bg-trenerBlue leading-none text-white font-semibold rounded-lg  hover:bg-trenerBlue/90'
+          'text-base bg-trenerBlue leading-none text-white font-semibold rounded-lg hover:bg-trenerBlue/90'
       },
       size: {
         default: 'px-3 py-1.5',
