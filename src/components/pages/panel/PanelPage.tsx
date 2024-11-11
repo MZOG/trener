@@ -308,12 +308,10 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
   const getImages = async () => {
     const { data } = await supabase.storage
       .from('gallery')
-      .list(`${userInfo?.id}/`, {
+      .list(`${slugify(userInfo?.full_name || '')}_${userInfo?.id}/`, {
         offset: 0,
         sortBy: { column: 'name', order: 'desc' }
       });
-
-    console.log(data);
 
     if (data !== null && data.length > 0) {
       setGallery(data);
@@ -334,9 +332,13 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       const file = e?.target?.files[0];
       const { data, error } = await supabase.storage
         .from('gallery')
-        .upload(`${userInfo?.id}/${uuidv4()}`, file, {
-          cacheControl: '3600'
-        });
+        .upload(
+          `${slugify(userInfo?.full_name || '')}_${userInfo?.id}/${uuidv4()}`,
+          file,
+          {
+            cacheControl: '3600'
+          }
+        );
 
       if (data) {
         getImages();
@@ -1052,11 +1054,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                 {gallery.length > 0 &&
                   gallery?.map((image) => (
                     <div
-                      key={`${SUPABASE_CDN}/${userInfo.id}/${image.name}`}
+                      key={`${SUPABASE_CDN}/${slugify(userInfo.full_name || '')}_${userInfo?.id}/${image.name}`}
                       className="space-y-2"
                     >
                       <Image
-                        src={`${SUPABASE_CDN}/${userInfo.id}/${image.name}`}
+                        src={`${SUPABASE_CDN}/${slugify(userInfo.full_name || '')}_${userInfo?.id}/${image.name}`}
                         alt={image.name}
                         width={162}
                         height={240}

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Trainer } from '@/types/Trainer';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { cn, formatPhoneNumber } from '@/lib/utils';
+import { cn, formatPhoneNumber, slugify } from '@/lib/utils';
 import {
   EarthIcon,
   Facebook,
@@ -24,6 +24,8 @@ const TrainerPage = ({ slug }: { slug: string }) => {
   // state
   const [trainer, setTrainer] = useState<Trainer>();
   const [loading, setLoading] = useState(true);
+  const [gallery, setGallery] = useState([]);
+  const SUPABASE_CDN = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/`;
 
   useEffect(() => {
     const getTrainerData = async () => {
@@ -42,7 +44,26 @@ const TrainerPage = ({ slug }: { slug: string }) => {
 
       if (data) {
         setTrainer(data);
+        getImages(data.id);
+
         setLoading(false);
+      }
+    };
+
+    const getImages = async (id: number) => {
+      const { data, error } = await supabase.storage
+        .from('gallery')
+        .list(`${slug}_${id}/`, {
+          offset: 0,
+          sortBy: { column: 'name', order: 'desc' }
+        });
+
+      if (error) {
+        console.log(error);
+      }
+
+      if (data) {
+        setGallery(data);
       }
     };
 
@@ -145,7 +166,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
       </div>
 
       <div id="trainer_about" className="bg-white p-5 md:p-8 rounded-xl border">
-        <h2 className="text-lg font-semibold mb-3">O mnie</h2>
+        <h2 className="text-lg font-semibold mb-5">O mnie</h2>
         {trainer?.about ? (
           <div dangerouslySetInnerHTML={{ __html: trainer?.about || '' }} />
         ) : (
@@ -157,7 +178,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
         id="trainer_training_info"
         className="bg-white p-5 md:p-8 rounded-xl border"
       >
-        <h2 className="text-lg font-semibold mb-3">Informacje treningowe</h2>
+        <h2 className="text-lg font-semibold mb-5">Informacje treningowe</h2>
 
         <div className="flex flex-col md:flex-row gap-3">
           {trainer?.price && (
@@ -187,7 +208,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
         id="trainer_specializations"
         className="bg-white p-5 md:p-8 rounded-xl border"
       >
-        <h2 className="text-lg font-semibold mb-3">Specjalizacje</h2>
+        <h2 className="text-lg font-semibold mb-5">Specjalizacje</h2>
         {trainer?.specializations ? (
           <div className="flex flex-wrap gap-2 cursor-">
             {JSON.parse(trainer?.specializations).map((spec: string) => (
@@ -199,6 +220,30 @@ const TrainerPage = ({ slug }: { slug: string }) => {
         ) : (
           'Brak specjalizacji :('
         )}
+      </div>
+
+      <div
+        id="trainer_gallery"
+        className="bg-white p-5 md:p-8 rounded-xl border"
+      >
+        <h2 className="text-lg font-semibold mb-5">Galeria zdjęć</h2>
+
+        <div>
+          {gallery && gallery.length > 0
+            ? gallery?.map((image, index) => {
+                return (
+                  <Image
+                    key={index}
+                    src={`${SUPABASE_CDN}/${slug}_${trainer?.id}/${image.name}`}
+                    alt={image.name}
+                    width={162}
+                    height={240}
+                    className="rounded-xl"
+                  />
+                );
+              })
+            : 'Brak zdjęć'}
+        </div>
       </div>
     </Container>
   );
