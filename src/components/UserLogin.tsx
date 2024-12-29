@@ -1,15 +1,14 @@
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
-import { Button } from './ui/button';
 
 const UserLogin = () => {
   return (
     <>
       <SignedOut>
         <SignInButton fallbackRedirectUrl="/panel">
-          <Button className="text-sm" variant="outline">
-            Panel trenera
-          </Button>
+          <p className="cursor-pointer text-lg md:text-sm md:font-medium">
+            Dla trenera
+          </p>
         </SignInButton>
       </SignedOut>
       <SignedIn>

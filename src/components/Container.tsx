@@ -22,7 +22,7 @@ const Container = ({
   }
 
   return (
-    <section className={cn('mx-5 lg:mx-auto max-w-6xl', className, width)}>
+    <section className={cn('px-5 lg:mx-auto max-w-6xl', className, width)}>
       {children}
     </section>
   );

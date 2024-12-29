@@ -91,7 +91,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
         />
         <div className="space-y-1">
           {trainer?.is_pro && <Button>Polecany trener</Button>}
-          <h1 className="font-semibold text-lg">{trainer?.full_name}</h1>
+          <h1 className="font-semibold text-xl">{trainer?.full_name}</h1>
           <p className="text-sm">Trener personalny {trainer?.location}</p>
           {trainer?.is_pro && (
             <div className="flex gap-2 items-center">
@@ -106,7 +106,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
             </div>
           )}
         </div>
-        <div className="flex flex-col md:text-sm w-full md:w-auto md:ml-auto space-y-1 bg-white p-5 rounded-xl border">
+        <div className="flex flex-col md:text-sm w-full md:w-auto md:ml-auto space-y-1 bg-white md:bg-transparent p-5 md:p-0 rounded-xl border md:border-none">
           {trainer?.phone && (
             <div className="flex gap-2 items-center">
               <PhoneIcon width={20} />
@@ -133,7 +133,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
             <div className="flex gap-2 items-center">
               <Instagram width={20} />
               <a
-                href={`${trainer?.instagram}`}
+                href={`https://instagram.com/${trainer?.instagram}`}
                 className="font-medium hover:underline underline-offset-2 hover:text-trenerBlue"
               >
                 Instagram

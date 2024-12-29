@@ -1,42 +1,45 @@
-import Image from 'next/image';
-import HeroImage from '../../public/svg/hero_image.svg';
-import dynamic from 'next/dynamic';
-
 // components
-import TrenerProLead from './TrenerProLead';
 import CitySearch from '../components/CitySearch';
-// const Search = dynamic(() => import('../components/CitySearch'), {
-//   loading: () => <p>Loading...</p>
-// });
-const PopularCities = dynamic(() => import('../components/PopularCities'), {
-  loading: () => <p>Loading...</p>
-});
+import Container from './Container';
+import Image from 'next/image';
 
 const Hero = () => {
   return (
-    <section className="max-w-6xl mt-14 mx-auto px-5 flex gap-5 items-center justify-between pb-[100px]">
-      <div className="space-y-7">
-        <TrenerProLead />
-        <HeroHeading />
-        <HeroLead />
+    <Container className="mt-5 md:mt-10 flex lg:gap-10 items-center">
+      <div className="w-full md:w-6/12">
+        <h1 className="mb-3">
+          <span className="block text-md lg:text-xl text-slate-600 md:font-medium mb-2">
+            Przeglądaj opinie, wybierz specjalizacje
+          </span>
+          <span className="text-2xl lg:text-5xl font-semibold leading-none">
+            Znajdź trenera{' '}
+            <span className="md:block">i umów się na trening</span>
+          </span>
+        </h1>
         <CitySearch />
-        <PopularCities />
       </div>
-
-      <Image src={HeroImage} alt="Znajdź swojego trenera personalnego" />
-    </section>
+      <div className="lg:relative lg:w-6/12 lg:h-[540px]">
+        <Image
+          src="/images/hero_image.jpg"
+          alt="Personal Trainer Background"
+          fill
+          style={{ objectFit: 'cover' }}
+          className="lg:absolute lg:w-full lg:h-[540px] rounded-2xl hidden lg:block"
+          priority
+        />
+      </div>
+    </Container>
   );
+
+  // return (
+  //   <section className="max-w-6xl mt-14 mx-auto px-5 flex gap-5 items-center justify-between pb-[100px]">
+  //     <div className="space-y-7">
+  //       <HeroHeading />
+  //       <CitySearch />
+  //       <PopularCities />
+  //     </div>
+  //   </section>
+  // );
 };
 
-const HeroHeading = () => (
-  <h1 className="text-5xl font-medium max-w-[490px]">
-    Znajdź swojego <span className="text-trenerBlue">trenera personalnego</span>
-  </h1>
-);
-
-const HeroLead = () => (
-  <p className="text-xl text-slate-800">
-    Wpisz swoje miasto, aby wyszukać trenerów
-  </p>
-);
 export default Hero;

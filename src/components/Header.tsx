@@ -1,145 +1,86 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Dialog, DialogPanel, PopoverGroup } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { Bars3Icon } from '@heroicons/react/24/outline';
 import UserLogin from './UserLogin';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle
+} from '@/components/ui/drawer';
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scroll, setScroll] = useState(false);
-
-  useEffect(() => {
-    window.addEventListener('scroll', () => {
-      setScroll(window.scrollY > 20);
-    });
-  }, []);
-
-  const menuLinks = [
-    {
-      name: 'Dla trenera',
-      href: '/dla-trenera'
-    },
-    {
-      name: 'Dla trenującego',
-      href: '/dla-trenujacego'
-    },
-    {
-      name: 'Pomoc',
-      href: '/pomoc'
-    }
-  ];
+  const [open, setOpen] = useState(false);
 
   return (
-    <header
-      className={cn(
-        scroll && 'bg-white/70 backdrop-blur-md',
-        'fixed top-0 w-full transition-all z-50'
-      )}
-    >
+    <header>
       <nav
         aria-label="Global"
         className={cn(
-          'mx-auto flex max-w-6xl items-center justify-between p-6 transition-all',
-          scroll && 'px-6 py-3'
+          'mx-auto flex max-w-6xl items-center justify-between px-5 py-5 md:py-6 transition-all'
         )}
       >
         <div className="flex lg:flex-1">
           <Link
             href="/"
-            className="text-sm font-medium group flex gap-2 items-center grow-0"
+            className="group flex gap-5 md:gap-10 items-center grow-0"
           >
             <span className="sr-only">Trener</span>
-            <span className="bg-trenerBlue px-1 py-0.5 font-semibold rounded-sm text-white">
-              TP
-            </span>{' '}
-            <span className="group-hover:text-trenerBlue">
-              Trener Personalny
+            <span className="md:text-lg font-medium !leading-none">
+              Trener <span className="block">Personalny</span>
             </span>
+
+            <p className="text-slate-600 hidden md:block">
+              Wyszukiwarka trenerów
+            </p>
           </Link>
         </div>
         <div className="flex lg:hidden">
           <button
             type="button"
-            onClick={() => setMobileMenuOpen(true)}
+            onClick={() => setOpen(true)}
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon aria-hidden="true" className="h-6 w-6" />
           </button>
         </div>
-        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          {menuLinks.map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-              className="text-sm font-medium hover:text-trenerBlue"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </PopoverGroup>
+
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <UserLogin />
         </div>
       </nav>
-      <Dialog
-        open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
-        className="lg:hidden"
-      >
-        <div className="fixed inset-0 z-10" />
-        <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-          <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              trener
-            </a>
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(false)}
-              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+
+      {/* mobile menu */}
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent className="px-5 pb-10">
+          <DrawerHeader className="text-left px-0 py-2">
+            <DrawerTitle className="mb-5">Opcje</DrawerTitle>
+          </DrawerHeader>
+          <div className="space-y-4">
+            <Link
+              href="/"
+              className="text-lg block"
+              onClick={() => setOpen(!open)}
             >
-              <span className="sr-only">Close menu</span>
-              <XMarkIcon aria-hidden="true" className="h-6 w-6" />
-            </button>
-          </div>
-          <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Features
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Marketplace
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Company
-                </a>
-              </div>
-              <div className="py-6">
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Log in
-                </a>
-              </div>
+              Wyszukaj trenera
+            </Link>
+            <div onClick={() => setOpen(!open)}>
+              <UserLogin />
             </div>
+            <Link
+              href="/zapytaj-trenera"
+              className="text-lg block"
+              onClick={() => setOpen(!open)}
+            >
+              Porady trenerów
+            </Link>
           </div>
-        </DialogPanel>
-      </Dialog>
+        </DrawerContent>
+      </Drawer>
     </header>
   );
 }

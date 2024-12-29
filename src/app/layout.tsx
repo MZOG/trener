@@ -5,6 +5,7 @@ import { plPL } from '@clerk/localizations';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: {
@@ -27,19 +28,17 @@ export default function RootLayout({
       signUpFallbackRedirectUrl="/panel"
       appearance={{
         layout: {
-          // termsPageUrl: '/terms',
           helpPageUrl: '/faq',
           unsafe_disableDevelopmentModeWarnings: true
         }
       }}
     >
       <html lang="pl">
-        <body
-          className={`${GeistSans.className} antialiased bg-[#FBFCFF] pt-[100px] text-trenerDark`}
-        >
+        <body className={`${GeistSans.className} antialiased`}>
           <Header />
           {children}
           <Toaster />
+          <Footer />
         </body>
       </html>
     </ClerkProvider>

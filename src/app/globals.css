@@ -37,6 +37,7 @@
 
 @layer base {
   :root {
+    --trener-secondary: 243 75 59;
     --trenerBlue: 225 100 55;
     --trenerDark: 243 17 22;
     --background: 0 0% 100%;

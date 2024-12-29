@@ -1,21 +1,16 @@
 'use client';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
-} from '@/components/ui/carousel';
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { Skeleton } from './ui/skeleton';
 import { Database } from '../../database.types';
-import LatestTrainerCard from './LatestTrainerCard';
-import { LatestTrainersProps } from '@/types/LatestTrainers';
+import { TrainerCardProps } from '@/types/LatestTrainers';
+import TrainerCard from '../components/trainer/TrainerCard';
+import Container from './Container';
+import Link from 'next/link';
+import { slugify } from '@/lib/utils';
 
 const LatestTrainers = () => {
-  const [trainers, setTrainers] = useState<LatestTrainersProps[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [trainers, setTrainers] = useState<TrainerCardProps[]>([]);
 
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,13 +20,12 @@ const LatestTrainers = () => {
   const getTrainers = async () => {
     const { data, error } = await supabase
       .from('users')
-      .select('full_name, location')
+      .select('full_name, location, slug, is_female, city')
       .not('is_trainer', 'is', false || null) // ignore normal users
       .not('location', 'is', null); // ignore trainers without location
 
     if (data) {
       setTrainers(data);
-      setLoading(false);
     }
 
     if (error) {
@@ -43,26 +37,49 @@ const LatestTrainers = () => {
     getTrainers();
   }, []);
 
-  if (loading) {
-    return <Skeleton className="h-20 w-40" />;
-  }
+  type GroupedByLocation = {
+    [location: string]: TrainerCardProps[];
+  };
+
+  const groupedByLocation: GroupedByLocation = {};
+
+  trainers?.forEach((trainer) => {
+    // @ts-ignore
+    if (!groupedByLocation[trainer?.location]) {
+      // @ts-ignore
+      groupedByLocation[trainer.location] = [];
+    }
+    // @ts-ignore
+    groupedByLocation[trainer.location].push(trainer);
+  });
 
   return (
-    <section className="mx-auto px-5 max-w-6xl pb-20">
-      <h2 className="text-xl">Niedawno dołączyli</h2>
-      <Carousel className="mt-5">
-        <CarouselContent>
-          {trainers &&
-            trainers.map((trainer, index) => (
-              <CarouselItem key={index} className="md:basis-1/3">
-                <LatestTrainerCard {...trainer} />
-              </CarouselItem>
-            ))}
-        </CarouselContent>
-        <CarouselPrevious className="border-none shadow-none" />
-        <CarouselNext className="border-none shadow-none" />
-      </Carousel>
-    </section>
+    <Container className="mt-14">
+      <h2 className="text-lg font-medium">Niedawno dołączyli</h2>
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-5 mt-5">
+        {Object.keys(groupedByLocation).map((location) => {
+          return (
+            <div key={location}>
+              <Link
+                href={`/miasto/${slugify(location)}`}
+                onClickCapture={() =>
+                  console.log(`Latest Trainers click:`, location)
+                }
+              >
+                <h4 className="mb-[10px] text-[15px] font-medium hover:underline underline-offset-4">
+                  {location}
+                </h4>
+              </Link>
+              <div className="space-y-2">
+                {groupedByLocation[location].map((trainer, index) => (
+                  <TrainerCard key={index} trainer={trainer} compact />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Container>
   );
 };
 

@@ -42,7 +42,6 @@ import {
 } from '@/components/ui/command';
 import { Command as CommandPrimitive } from 'cmdk';
 import { X } from 'lucide-react';
-import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import { cn, slugify } from '@/lib/utils';
 import { Trainer } from '@/types/Trainer';
 
@@ -51,21 +50,8 @@ import TextAlign from '@tiptap/extension-text-align';
 import { EditorContent, useEditor, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
-type ClientPageProps = {
-  userID: string;
-  avatar: string | StaticImport;
-};
-
-type GalleryImagesProps = {
-  name: string;
-  bucket_id: string;
-  owner: string;
-  id: string;
-  updated_at: string;
-  created_at: string;
-  last_accessed_at: string;
-  // metadata: Record<string, any>;
-};
+import { ClientPageProps, GalleryImagesProps } from '@/types/PanelPage';
+import ShowToast from '@/components/ShowToast';
 
 type SpecsProps = string;
 
@@ -161,7 +147,11 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       .single();
 
     if (error) {
-      ShowToast('Ups', 'Coś poszło nie tak', 'error');
+      ShowToast({
+        title: 'Ups',
+        description: 'Coś poszło nie tak',
+        type: 'error'
+      });
       return;
     }
 
@@ -248,26 +238,6 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     });
   };
 
-  const ShowToast = (
-    title?: string,
-    description?: string,
-    type?: 'ok' | 'error'
-  ) => {
-    if (type === 'error') {
-      toast({
-        title: title,
-        description: description,
-        variant: 'destructive'
-      });
-    } else {
-      toast({
-        title: title,
-        description: description,
-        variant: 'responseOK'
-      });
-    }
-  };
-
   const handleUpdateProfile = async () => {
     const { data, error } = await supabase
       .from('users')
@@ -277,10 +247,18 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       .select();
 
     if (error)
-      ShowToast('Błąd..', 'Spróbuj zapisać zmiany jeszcze raz', 'error');
+      ShowToast({
+        title: 'Błąd',
+        description: 'Spróbuj zapisać zmiany jeszcze raz',
+        type: 'error'
+      });
 
     if (data) {
-      ShowToast('Fajnie :)', 'Zmiany zostały zapisane', 'ok');
+      ShowToast({
+        title: 'Udało się',
+        description: 'Zmiany zostały zapisane',
+        type: 'ok'
+      });
       checkStrength();
     }
   };
@@ -479,16 +457,18 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
         .select();
 
       if (error) {
-        toast({
+        ShowToast({
           title: 'Ups..',
-          description: 'Coś poszło nie tak'
+          description: 'Coś poszło nie tak',
+          type: 'error'
         });
       }
 
       if (data) {
-        toast({
-          title: 'Fajnie',
-          description: 'Zmiany zostały zapisane'
+        ShowToast({
+          title: 'Dzięki!',
+          description: 'Twoja propozycja została wysłana',
+          type: 'ok'
         });
       }
     }
@@ -502,10 +482,18 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
       .select();
 
     if (error)
-      ShowToast('Błąd..', 'Spróbuj zapisać zmiany jeszcze raz', 'error');
+      ShowToast({
+        title: 'Błąd',
+        description: 'Spróbuj zapisać zmiany jeszcze raz',
+        type: 'error'
+      });
 
     if (data) {
-      ShowToast('Fajnie :)', 'Zmiany zostały zapisane', 'ok');
+      ShowToast({
+        title: 'Udało się',
+        description: 'Zmiany zostały zapisane',
+        type: 'ok'
+      });
       getData();
       checkStrength();
     }
@@ -515,6 +503,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
     return <LoadingPanel />;
   }
 
+  // ten check do wyjebania
   if (userInfo?.is_trainer === null) {
     return (
       <section className="max-w-3xl mx-auto px-5">
@@ -590,7 +579,8 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                             id="phone"
                             name="phone"
                             className="text-trenerDark"
-                            value={userInfo.phone || '-'}
+                            value={userInfo.phone ?? '-'}
+                            placeholder="Tylko cyfry"
                           />
                         </div>
 
@@ -1065,8 +1055,7 @@ const ClientPage = ({ userID, avatar }: ClientPageProps) => {
                         className="rounded-xl"
                       />
                       <Button
-                        variant="red"
-                        size="red"
+                        variant="default"
                         onClick={() => handleRemoveImage(image.name)}
                       >
                         <TrashIcon className="w-5 h-5 text-white" />
@@ -1240,7 +1229,7 @@ const ProFeatures = ({ is_pro }: { is_pro: boolean | null | undefined }) => {
       <div className="p-7 bg-trenerBlue rounded-lg text-white">
         <div className="flex justify-between items-center">
           <p className="font-semibold">Trener PRO</p>
-          <Button asChild variant="secondary_pro">
+          <Button asChild variant="secondary">
             <Link href="/trener-pro">Kup za 39 zł</Link>
           </Button>
         </div>
