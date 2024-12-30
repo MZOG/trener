@@ -1,17 +1,30 @@
 'use client';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useState, useEffect } from 'react';
 import { Trainer } from '@/types/Trainer';
 import { createClient } from '@/lib/supabase/client';
 import Container from '@/components/Container';
 import CitySearch from '@/components/CitySearch';
 import TrainerCard from '@/components/trainer/TrainerCard';
-
+import CityFilters from './CityFilters';
+import { FiltersProps } from '@/types/Filters';
+import { cn } from '@/lib/utils';
 const CityContent = ({ slug }: { slug: string }) => {
   const [loading, setLoading] = useState(true);
   const [trainers, setTrainers] = useState<Trainer[]>();
   const [filteredTrainers, setFilteredTrainers] = useState<Trainer[]>([]);
   const [featuredTrainers, setFeaturedTrainers] = useState<Trainer[]>([]);
+
+  // filters
+  const [filters, setFilters] = useState<FiltersProps>({
+    price: null,
+    womanOnly: null,
+    specializations: null,
+    online: null,
+    dietPlan: null
+  });
+  const handleFilters = (data: FiltersProps) => {
+    setFilters(data);
+  };
 
   const supabase = createClient();
 
@@ -45,14 +58,31 @@ const CityContent = ({ slug }: { slug: string }) => {
   useEffect(() => {
     if (trainers) {
       const filtered = trainers?.filter((trainer) => {
-        return !trainer.is_pro;
+        // other filters here
+        const matchWomanOnly =
+          !filters.womanOnly || trainer.is_female === filters.womanOnly;
+        const matchOnline =
+          !filters.online || trainer.work_online === filters.online;
+        const matchDietPlan =
+          !filters.dietPlan || trainer.diet_plan === filters.dietPlan;
+        return (
+          !trainer.is_pro && matchWomanOnly && matchOnline && matchDietPlan
+        );
       });
 
-      setFilteredTrainers([...featuredTrainers, ...filtered]);
+      // sort trainers by date here
+      const sorted = filtered.sort((a, b) => {
+        return (
+          new Date(b.created_at as string).getTime() -
+          new Date(a.created_at as string).getTime()
+        );
+      });
+
+      setFilteredTrainers(sorted);
     }
 
     return;
-  }, [trainers]);
+  }, [trainers, filters]);
 
   if (loading) {
     return (
@@ -86,11 +116,21 @@ const CityContent = ({ slug }: { slug: string }) => {
         </h1>
 
         <div className="grid grid-cols-12 gap-5 mt-10">
-          <aside className="col-span-3 border rounded-lg p-4">
-            <p>Filtry</p>
-          </aside>
+          <CityFilters handleFilters={handleFilters} />
 
-          <div className="col-span-9">
+          <div
+            className={cn(
+              'col-span-9',
+              featuredTrainers.length > 0 && 'space-y-5'
+            )}
+          >
+            {featuredTrainers && (
+              <div className="grid grid-cols-3 gap-5">
+                {featuredTrainers?.map((trener, index) => (
+                  <TrainerCard trainer={trener} key={index} />
+                ))}
+              </div>
+            )}
             <div className="grid grid-cols-3 gap-5">
               {filteredTrainers?.map((trener, index) => (
                 <TrainerCard trainer={trener} key={index} />
