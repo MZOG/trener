@@ -22,7 +22,7 @@ export default function CityFilters({ handleFilters }: HandleFiltersProps) {
   };
 
   return (
-    <aside className="col-span-3 border rounded-xl p-5 space-y-7 self-start">
+    <aside className="col-span-3 border rounded-xl p-5 space-y-3 self-start">
       {/* WOMAN ONLY */}
       <p className="font-medium">Filtry</p>
       <div className="flex items-center space-x-2">
@@ -34,7 +34,9 @@ export default function CityFilters({ handleFilters }: HandleFiltersProps) {
             setWomanOnly(event);
           }}
         />
-        <Label htmlFor="womanOnly">Tylko kobiety</Label>
+        <Label htmlFor="womanOnly" className="cursor-pointer">
+          Tylko kobiety
+        </Label>
       </div>
 
       {/* ONLINE */}
@@ -47,7 +49,9 @@ export default function CityFilters({ handleFilters }: HandleFiltersProps) {
             setOnline(event);
           }}
         />
-        <Label htmlFor="online">Prowadzenie online</Label>
+        <Label htmlFor="online" className="cursor-pointer">
+          Prowadzenie online
+        </Label>
       </div>
 
       {/* DIET PLAN */}
@@ -60,7 +64,9 @@ export default function CityFilters({ handleFilters }: HandleFiltersProps) {
             setDietPlan(event);
           }}
         />
-        <Label htmlFor="dietPlan">Plan dietetyczny</Label>
+        <Label htmlFor="dietPlan" className="cursor-pointer">
+          Plan dietetyczny
+        </Label>
       </div>
 
       {/* CENA */}

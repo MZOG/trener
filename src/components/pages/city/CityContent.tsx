@@ -132,9 +132,13 @@ const CityContent = ({ slug }: { slug: string }) => {
               </div>
             )}
             <div className="grid grid-cols-3 gap-5">
-              {filteredTrainers?.map((trener, index) => (
-                <TrainerCard trainer={trener} key={index} />
-              ))}
+              {filteredTrainers ? (
+                filteredTrainers?.map((trener, index) => (
+                  <TrainerCard trainer={trener} key={index} />
+                ))
+              ) : (
+                <p>Brak trenerów</p>
+              )}
             </div>
           </div>
         </div>
