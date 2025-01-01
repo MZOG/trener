@@ -212,7 +212,11 @@ const TrainerPage = ({ slug }: { slug: string }) => {
         {trainer?.specializations ? (
           <div className="flex flex-wrap gap-2 cursor-">
             {JSON.parse(trainer?.specializations).map((spec: string) => (
-              <Button variant="spec_btn" key={spec}>
+              <Button
+                variant="outline"
+                className="px-2 h-7 font-normal"
+                key={spec}
+              >
                 {spec}
               </Button>
             ))}
