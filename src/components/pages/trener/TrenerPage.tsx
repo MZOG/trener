@@ -80,6 +80,97 @@ const TrainerPage = ({ slug }: { slug: string }) => {
     );
   }
 
+  // render components
+  const renderGallery = () => (
+    <div id="trainer_gallery" className="bg-white p-5 md:p-8 rounded-xl border">
+      <h2 className="text-lg font-semibold mb-5">Galeria zdjęć</h2>
+
+      <div>
+        {gallery && gallery.length > 0
+          ? gallery?.map((image, index) => {
+              return (
+                <Image
+                  key={index}
+                  src={`${SUPABASE_CDN}/${slug}_${trainer?.id}/${image.name}`}
+                  alt={image.name}
+                  width={162}
+                  height={240}
+                  className="rounded-xl"
+                />
+              );
+            })
+          : 'Brak zdjęć'}
+      </div>
+    </div>
+  );
+
+  const renderAbout = () => (
+    <div id="trainer_about" className="bg-white p-5 md:p-8 rounded-xl border">
+      <h2 className="text-lg font-semibold mb-5">O mnie</h2>
+      {trainer?.about ? (
+        <div dangerouslySetInnerHTML={{ __html: trainer?.about || '' }} />
+      ) : (
+        <p>Brak opisu :(</p>
+      )}
+    </div>
+  );
+
+  const renderTrainingInfo = () => (
+    <div
+      id="trainer_training_info"
+      className="bg-white p-5 md:p-8 rounded-xl border"
+    >
+      <h2 className="text-lg font-semibold mb-5">Informacje treningowe</h2>
+
+      <div className="flex flex-col md:flex-row gap-3">
+        {trainer?.price && (
+          <div className="flex flex-col gap-1 text-sm">
+            <p className="text-gray-600">Cena za godzinę</p>
+            <p className="text-base font-medium">{trainer?.price} zł</p>
+          </div>
+        )}
+
+        <div className="flex flex-col gap-1 text-sm">
+          <p className="text-gray-600">Prowadzenie online</p>
+          <p className="text-base font-medium">
+            {trainer?.work_online ? 'Tak' : 'Nie'}
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-1 text-sm">
+          <p className="text-gray-600">Plan dietetyczny</p>
+          <p className="text-base font-medium">
+            {trainer?.diet_plan ? 'Tak' : 'Nie'}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSpecializations = () => (
+    <div
+      id="trainer_specializations"
+      className="bg-white p-5 md:p-8 rounded-xl border"
+    >
+      <h2 className="text-lg font-semibold mb-5">Specjalizacje</h2>
+      {trainer?.specializations ? (
+        <div className="flex flex-wrap gap-2 cursor-">
+          {JSON.parse(trainer?.specializations).map((spec: string) => (
+            <Button
+              variant="outline"
+              className="px-2 h-7 font-normal"
+              key={spec}
+            >
+              {spec}
+            </Button>
+          ))}
+        </div>
+      ) : (
+        'Brak specjalizacji :('
+      )}
+    </div>
+  );
+
   return (
     <Container className="rounded-xl flex gap-6 flex-col md:max-w-4xl lg:max-w-3xl mb-10">
       <div id="trainer_picture" className="flex items-center gap-5 flex-wrap">
@@ -90,7 +181,7 @@ const TrainerPage = ({ slug }: { slug: string }) => {
           )}
         />
         <div className="space-y-1">
-          {trainer?.is_pro && <Button>Polecany trener</Button>}
+          {trainer?.is_pro && <p>Polecany trener</p>}
           <h1 className="font-semibold text-xl">{trainer?.full_name}</h1>
           <p className="text-sm">Trener personalny {trainer?.location}</p>
           {trainer?.is_pro && (
@@ -164,91 +255,10 @@ const TrainerPage = ({ slug }: { slug: string }) => {
           )}
         </div>
       </div>
-
-      <div id="trainer_about" className="bg-white p-5 md:p-8 rounded-xl border">
-        <h2 className="text-lg font-semibold mb-5">O mnie</h2>
-        {trainer?.about ? (
-          <div dangerouslySetInnerHTML={{ __html: trainer?.about || '' }} />
-        ) : (
-          <p>Brak opisu :(</p>
-        )}
-      </div>
-
-      <div
-        id="trainer_training_info"
-        className="bg-white p-5 md:p-8 rounded-xl border"
-      >
-        <h2 className="text-lg font-semibold mb-5">Informacje treningowe</h2>
-
-        <div className="flex flex-col md:flex-row gap-3">
-          {trainer?.price && (
-            <div className="flex flex-col gap-1 text-sm">
-              <p className="text-gray-600">Cena za godzinę</p>
-              <p className="text-base font-medium">{trainer?.price} zł</p>
-            </div>
-          )}
-
-          <div className="flex flex-col gap-1 text-sm">
-            <p className="text-gray-600">Prowadzenie online</p>
-            <p className="text-base font-medium">
-              {trainer?.work_online ? 'Tak' : 'Nie'}
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-1 text-sm">
-            <p className="text-gray-600">Plan dietetyczny</p>
-            <p className="text-base font-medium">
-              {trainer?.diet_plan ? 'Tak' : 'Nie'}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div
-        id="trainer_specializations"
-        className="bg-white p-5 md:p-8 rounded-xl border"
-      >
-        <h2 className="text-lg font-semibold mb-5">Specjalizacje</h2>
-        {trainer?.specializations ? (
-          <div className="flex flex-wrap gap-2 cursor-">
-            {JSON.parse(trainer?.specializations).map((spec: string) => (
-              <Button
-                variant="outline"
-                className="px-2 h-7 font-normal"
-                key={spec}
-              >
-                {spec}
-              </Button>
-            ))}
-          </div>
-        ) : (
-          'Brak specjalizacji :('
-        )}
-      </div>
-
-      <div
-        id="trainer_gallery"
-        className="bg-white p-5 md:p-8 rounded-xl border"
-      >
-        <h2 className="text-lg font-semibold mb-5">Galeria zdjęć</h2>
-
-        <div>
-          {gallery && gallery.length > 0
-            ? gallery?.map((image, index) => {
-                return (
-                  <Image
-                    key={index}
-                    src={`${SUPABASE_CDN}/${slug}_${trainer?.id}/${image.name}`}
-                    alt={image.name}
-                    width={162}
-                    height={240}
-                    className="rounded-xl"
-                  />
-                );
-              })
-            : 'Brak zdjęć'}
-        </div>
-      </div>
+      {renderAbout()}
+      {renderTrainingInfo()}
+      {renderSpecializations()}
+      {renderGallery()}
     </Container>
   );
 };
