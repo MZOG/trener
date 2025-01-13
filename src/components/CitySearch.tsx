@@ -87,7 +87,7 @@ const CitySearch = () => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <div className="cursor-pointer border py-4 px-3 bg-white rounded-md flex gap-2 relative w-full">
+          <div className="cursor-pointer shadow-lg py-4 px-3 bg-white rounded-lg flex gap-2 relative w-full">
             <MapPin strokeWidth={1.5} />
             <p className="text-slate-500">Wpisz swoje miasto</p>
             <Button className="absolute right-1 top-1/2 transform -translate-y-1/2 py-6">

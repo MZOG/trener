@@ -11,16 +11,17 @@ import {
   DrawerHeader,
   DrawerTitle
 } from '@/components/ui/drawer';
+import { Button } from './ui/button';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header>
+    <header className="lg:absolute w-full z-50 top-14">
       <nav
         aria-label="Global"
         className={cn(
-          'mx-auto flex max-w-6xl items-center justify-between px-5 py-5 md:py-6 transition-all'
+          'mx-auto lg:shadow-lg flex max-w-5xl bg-white lg:rounded-lg items-center justify-between px-5 py-5 md:py-3 transition-all'
         )}
       >
         <div className="flex lg:flex-1">
@@ -29,15 +30,25 @@ export default function Header() {
             className="group flex gap-5 md:gap-10 items-center grow-0"
           >
             <span className="sr-only">Trener</span>
-            <span className="md:text-lg font-medium !leading-none">
-              Trener <span className="block">Personalny</span>
+            <span className="md:text-sm font-medium !leading-none">
+              Trener Personalny
             </span>
-
-            <p className="text-slate-600 hidden md:block">
-              Wyszukiwarka trenerów
-            </p>
           </Link>
         </div>
+
+        <ul className="hidden lg:flex gap-2">
+          <li>
+            <Button asChild variant="secondary_header">
+              <Link href="/dla-trenera">Dla trenera</Link>
+            </Button>
+          </li>
+          <li>
+            <Button asChild variant="secondary_header">
+              <Link href="/dla-trenujacego">Dla trenującego</Link>
+            </Button>
+          </li>
+        </ul>
+
         <div className="flex lg:hidden">
           <button
             type="button"

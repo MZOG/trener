@@ -8,10 +8,10 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <HeroFeatures />
-      <FeaturedTrainers />
-      <LatestTrainers />
-      <TrainersAdvice />
+      {/* <HeroFeatures /> */}
+      {/* <FeaturedTrainers /> */}
+      {/* <LatestTrainers /> */}
+      {/* <TrainersAdvice /> */}
     </>
   );
 }

@@ -1,34 +1,41 @@
 // components
 import CitySearch from '../components/CitySearch';
 import Container from './Container';
-import Image from 'next/image';
 
 const Hero = () => {
   return (
-    <Container className="mt-5 md:mt-10 flex lg:gap-10 items-center">
-      <div className="w-full md:w-6/12">
-        <h1 className="mb-3">
-          <span className="block text-md lg:text-xl text-slate-600 md:font-medium mb-2">
-            Przeglądaj opinie, wybierz specjalizacje
-          </span>
-          <span className="text-2xl lg:text-5xl font-semibold leading-none">
-            Znajdź trenera{' '}
-            <span className="md:block">i umów się na trening</span>
-          </span>
-        </h1>
-        <CitySearch />
-      </div>
-      <div className="lg:relative lg:w-6/12 lg:h-[540px]">
-        <Image
-          src="/images/hero_image.jpg"
-          alt="Personal Trainer Background"
-          fill
-          style={{ objectFit: 'cover' }}
-          className="lg:absolute lg:w-full lg:h-[540px] rounded-2xl hidden lg:block"
-          priority
-        />
-      </div>
-    </Container>
+    <div className="bg-gradient-to-br from-cyan-100 to-rose-200 min-h-[70vh] mt-5 mx-5 rounded-xl">
+      <Container className="pt-40">
+        <div className="flex flex-col gap-5 justify-center items-center">
+          <h1 className="text-center">
+            <span className="text-2xl lg:text-5xl font-semibold">
+              Znajdź swojego
+              <span className="md:block">trenera personalnego</span>
+            </span>
+          </h1>
+          <p className="text-lg">
+            Darmowa wyszukiwarka trenerów personalnych w Twoim mieście!
+          </p>
+          <div className="min-w-[400px]">
+            <CitySearch />
+          </div>
+        </div>
+      </Container>
+    </div>
+    // <Container className="mt-5 md:mt-10 flex lg:gap-10 items-center">
+    //   <div className="w-full md:w-6/12">
+    //     <h1 className="mb-3">
+    //       <span className="block text-md lg:text-xl text-slate-600 md:font-medium mb-2">
+    //         Przeglądaj opinie, wybierz specjalizacje
+    //       </span>
+    //       <span className="text-2xl lg:text-5xl font-semibold leading-none">
+    //         Znajdź trenera{' '}
+    //         <span className="md:block">i umów się na trening</span>
+    //       </span>
+    //     </h1>
+    //     <CitySearch />
+    //   </div>
+    // </Container>
   );
 
   // return (
