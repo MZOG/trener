@@ -34,7 +34,7 @@ export default function RootLayout({
       }}
     >
       <html lang="pl">
-        <body className={`${GeistSans.className} antialiased`}>
+        <body className={`antialiased`}>
           <Header />
           {children}
           <Toaster />

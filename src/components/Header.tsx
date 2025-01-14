@@ -17,11 +17,11 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="lg:absolute w-full z-50 top-14">
+    <header>
       <nav
         aria-label="Global"
         className={cn(
-          'mx-auto lg:shadow-lg flex max-w-5xl bg-white lg:rounded-lg items-center justify-between px-5 py-5 md:py-3 transition-all'
+          'mx-auto flex max-w-6xl items-center justify-between px-5 py-5 md:py-6 transition-all'
         )}
       >
         <div className="flex lg:flex-1">
@@ -30,8 +30,11 @@ export default function Header() {
             className="group flex gap-5 md:gap-10 items-center grow-0"
           >
             <span className="sr-only">Trener</span>
-            <span className="md:text-sm font-medium !leading-none">
-              Trener Personalny
+            <span className="md:text-sm font-medium flex items-center gap-1 !leading-none">
+              Trener Personalny{' '}
+              <span className="text-[11px] bg-blue-600 text-white px-1 py-0.5 rounded-sm">
+                BETA
+              </span>
             </span>
           </Link>
         </div>
@@ -48,7 +51,6 @@ export default function Header() {
             </Button>
           </li>
         </ul>
-
         <div className="flex lg:hidden">
           <button
             type="button"

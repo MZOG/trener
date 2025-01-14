@@ -18,10 +18,10 @@ export async function generateMetadata({ params }: Props) {
 
   if (data) {
     return {
-      title: data[0]?.location || 'Brak trenerów',
+      title: data[0]?.location || 'Nie znaleziono trenerów',
       description: data[0]?.location
         ? `Trenerzy personalni ${data[0]?.location}`
-        : 'Brak trenerów'
+        : 'Nie znaleziono trenerów'
     };
   }
 }
